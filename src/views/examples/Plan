@@ -1,0 +1,220 @@
+import React, { useEffect, useState } from 'react';
+import Header from 'components/Headers/Header';
+import { Container, Row, Card, CardHeader, Badge, Button, FormGroup, InputGroup, InputGroupAddon, InputGroupText, CardBody, Col } from 'reactstrap';
+import ReactDatetime from 'react-datetime';
+import { useNavigate, useParams } from 'react-router-dom';
+import moment from 'moment';
+
+const Planification = () => {
+  const { id } = useParams();
+  const [ressources, setRessources] = useState([]);
+  const [selectedRessources, setSelectedRessources] = useState([]);
+  const [dateDebut, setDateDebut] = useState(null);
+  const [dateFin, setDateFin] = useState(null);
+  const authRole = localStorage.getItem('authRole');
+  const authToken = localStorage.getItem('authToken');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRessources = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+        const data = await response.json();
+        setRessources(data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des ressources:', error);
+      }
+    };
+
+    fetchRessources();
+  }, [authRole]);
+
+  const handleSelectRessource = (ressource) => {
+    const alreadySelected = selectedRessources.find((r) => r.id === ressource.id);
+    if (!alreadySelected) {
+      setSelectedRessources([...selectedRessources, { ...ressource, quantite: 1 }]);
+    }
+  };
+
+  const handleRemoveRessource = (ressourceToRemove) => {
+    setSelectedRessources(selectedRessources.filter((r) => r.id !== ressourceToRemove.id));
+  };
+
+  const handleQuantiteChange = (ressourceId, quantite) => {
+    setSelectedRessources(selectedRessources.map((r) => {
+      if (r.id === ressourceId) {
+        const quantiteMax = ressources.find((res) => res.id === ressourceId).quantite;
+        const quantiteValide = Math.min(parseFloat(quantite), quantiteMax);
+
+        if (parseFloat(quantite) > quantiteMax) {
+          alert(`La quantité maximale pour ${r.nom} est ${quantiteMax}`);
+        }
+
+        return { ...r, quantite: quantiteValide };
+      }
+      return r;
+    }));
+  };
+
+  const formatDate = (date) => {
+    const validDate = date instanceof Date ? date : new Date(date);
+    const localDate = new Date(validDate.getTime() - (validDate.getTimezoneOffset() * 60000));
+    return localDate.toISOString().split('T')[0];
+  };
+
+  const calculateTotalPrice = () => {
+    return selectedRessources.reduce((total, ressource) => {
+      return total + ressource.valeurUnitaire * ressource.quantite;
+    }, 0);
+  };
+
+  const handleSubmit = async () => {
+    if (!dateDebut || !dateFin) {
+      alert("Veuillez sélectionner les dates de début et de fin.");
+      return;
+    }
+
+    const ressourcesPlanifiees = selectedRessources.map((ressource) => ({
+      id_ressource: ressource.id,
+      quantite: ressource.quantite,
+    }));
+
+    const jsonData = {
+      id_demande: id,
+      dateDebut: formatDate(dateDebut),
+      dateFin: formatDate(dateFin),
+      ressources: ressourcesPlanifiees,
+      total: calculateTotalPrice()
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/planification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify(jsonData)
+      });
+
+      if (response.ok) {
+        alert('Planification envoyée avec succès !');
+      } else {
+        alert('Une erreur est survenue lors de la planification');
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de la planification:', error);
+    }
+    
+    const data = {
+      "statut": 6,
+      "id_demande": id
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/statut`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        navigate(`/${authRole}/Planification/travaux`);
+      } else {
+        console.error('Erreur lors de l\'envoi de la demande:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erreur réseau:', error);
+    }
+  };
+
+  // Validation pour la date de début (ne pas autoriser les dates avant aujourd'hui)
+  const validDateDebut = (current) => {
+    return current.isSameOrAfter(moment(), 'day');
+  };
+
+  // Validation pour la date de fin (ne pas autoriser les dates avant la date de début)
+  const validDateFin = (current) => {
+    return dateDebut ? current.isSameOrAfter(moment(dateDebut), 'day') : false;
+  };
+
+  return (
+    <>
+      <Header />
+      <Container className="mt--7" fluid>
+        <Row className="mt-5">
+          <div className="col">
+            <Card className="bg-default shadow">
+              <CardHeader className="bg-transparent border-0">
+                <h3 className="text-white mb-0">Formulaire de Planification</h3>
+                <h4 className="text-white mb-0">Prix total: {calculateTotalPrice()} Ar</h4>
+              </CardHeader>
+              <CardBody className="pt-0 pt-md-4">
+
+                <Row>
+                  <Col md="4">
+                    <FormGroup>
+                      <h5 className="text-white">Date de début</h5>
+                      <InputGroup className="input-group-alternative" style={{ width: '100%' }}>
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="ni ni-calendar-grid-58" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <ReactDatetime
+                          inputProps={{
+                            placeholder: "Sélectionnez la date de début"
+                          }}
+                          timeFormat={false}
+                          isValidDate={validDateDebut}
+                          onChange={(date) => setDateDebut(date)}
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </Col>
+
+                  <Col md="4">
+                    <FormGroup>
+                      <h5 className="text-white">Date de fin</h5>
+                      <InputGroup className="input-group-alternative" style={{ width: '100%' }}>
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="ni ni-calendar-grid-58" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <ReactDatetime
+                          inputProps={{
+                            placeholder: "Sélectionnez la date de fin"
+                          }}
+                          timeFormat={false}
+                          isValidDate={validDateFin}
+                          onChange={(date) => setDateFin(date)}
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+                {/* Affichage des ressources sélectionnées et bouton de validation */}
+                <div className="p-3">
+                  <Button color="success" onClick={handleSubmit}>
+                    Valider
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+        </Row>
+      </Container>
+    </>
+  );
+};
+
+export default Planification;
