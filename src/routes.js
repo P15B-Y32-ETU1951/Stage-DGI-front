@@ -51,6 +51,9 @@ import Rapport from "views/examples/Rapport";
 import UploadFileComponent from "views/examples/Upload";
 import Historique from "views/examples/Historique";
 import Statistique from "views/examples/Statistique";
+import DocViewer from "views/examples/DocViewer";
+import PdfViewer from "views/examples/PdfViewer";
+import ChangePassword from "views/examples/Change-Password";
 
 var routes = [
   {
@@ -96,11 +99,18 @@ var routes = [
     component: <Register />,
     layout: "/auth",
   },
+  {
+    path: "/change-password/:id",
+    name: "Change Password",
+    icon: "ni ni-circle-08 text-pink",
+    component: <ChangePassword />,
+    layout: "/auth",
+  },
 
   //DPR_SAF
   {
     path: "/prise_en_charge",
-    name: "Demandes prise en Charge",
+    name: "pec",
     icon: "ni ni-badge text-green",
     component: <Pris_en_Charge />,
     layout: "/DPR_SAF",
@@ -134,8 +144,8 @@ var routes = [
     layout: "/DPR_SAF",
   },
   {
-    path: "/index",
-    name: "Demandes reçues",
+    path: "/demande",
+    name: "Demandes ",
     icon: "ni ni-send text-blue",
     component: <DPR_Demandes />,
     layout: "/DPR_SAF",
@@ -143,7 +153,7 @@ var routes = [
   },
   {
     path: "/demande/valide",
-    name: "Demandes validées",
+    name: "valide",
     icon: "ni ni-check-bold text-green",
     component: <DPR_Demande_Valide />,
     layout: "/DPR_SAF",
@@ -166,7 +176,7 @@ var routes = [
 
   },
   {
-    path: "/Rapport/upload", // Utilisez :id pour indiquer un paramètre dynamique
+    path: "/Rapport/upload/:id", // Utilisez :id pour indiquer un paramètre dynamique
     name: "upload",
     icon: "ni ni-settings text-purple",
     component: <UploadFileComponent/>, // Assurez-vous de ne pas utiliser de balises JSX ici
@@ -180,7 +190,14 @@ var routes = [
     layout: "/DPR_SAF",
   },
   {
-    path: "/Statistique", // Utilisez :id pour indiquer un paramètre dynamique
+    path: "/Document/:id", // Utilisez :id pour indiquer un paramètre dynamique
+    name: "Documents",
+    icon: "ni ni-settings text-purple",
+    component: <PdfViewer/>, // Assurez-vous de ne pas utiliser de balises JSX ici
+    layout: "/DPR_SAF",
+  },
+  {
+    path: "/index", // Utilisez :id pour indiquer un paramètre dynamique
     name: "Statistique",
     icon: "ni ni-settings text-purple",
     component: <Statistique/>, // Assurez-vous de ne pas utiliser de balises JSX ici
@@ -188,7 +205,7 @@ var routes = [
   },
   {
     path: "/Planification/travaux", // Utilisez :id pour indiquer un paramètre dynamique
-    name: "Travaux planifiés",
+    name: "T2",
     icon: "ni ni-settings text-red",
     component: <Travaux_Planifie/>, // Assurez-vous de ne pas utiliser de balises JSX ici
     layout: "/DPR_SAF",
@@ -202,14 +219,14 @@ var routes = [
   },
   {
     path: "/Planification/en_cours", // Utilisez :id pour indiquer un paramètre dynamique
-    name: "Travaux en cours",
+    name: "Travaux ",
     icon: "ni ni-settings text-green",
     component: <Travaux_en_Cours/>, // Assurez-vous de ne pas utiliser de balises JSX ici
     layout: "/DPR_SAF",
   },
   {
     path: "/Travaux/termine", // Utilisez :id pour indiquer un paramètre dynamique
-    name: "Travaux réceptionnés",
+    name: "T1",
     icon: "ni ni-settings text-info",
     component: <Travaux_Termine/>, // Assurez-vous de ne pas utiliser de balises JSX ici
     layout: "/DPR_SAF",
@@ -254,13 +271,6 @@ var routes = [
 
 
   //CHEF_SERVICE
-  {
-    path: "/test",
-    name: "Test",
-    icon: "ni ni-send text-green",
-    component: <Test />,
-    layout: "/CHEF_SERVICE",
-  },
   {
     path: "/demande",
     name: "Envoyer une Demande",

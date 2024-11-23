@@ -2,6 +2,7 @@ import Header from 'components/Headers/Header';
 import { useNavigate } from 'react-router-dom'; // Importer useNavigate si vous utilisez React Router v6
 import { useEffect, useState } from 'react';
 import { Badge, Button, Card, CardHeader, Container, DropdownItem, DropdownMenu, DropdownToggle, Media, Row, Table, UncontrolledDropdown } from 'reactstrap';
+import TravauxHeader from 'components/Headers/TravauxHeader';
 
 const Travaux_Planifie = () => {
   const [demandes, setDemandes] = useState([]);
@@ -34,16 +35,12 @@ const Travaux_Planifie = () => {
    
 
     // Récupérer les valeurs du localStorage
-    const service = localStorage.getItem('authService');
-    const utilisateurId = localStorage.getItem('authId');
+    
     const authToken = localStorage.getItem('authToken');
     const role = localStorage.getItem('authRole');
 
 
-    if (!service || !utilisateurId) {
-        console.error("Service ou utilisateur non trouvé dans le localStorage");
-        return;
-    }
+    
 
     // Reformatage de la date au format YYYY-MM-DD
    
@@ -91,7 +88,7 @@ const sortByDateDesc = () => {
 
   return (
     <>
-      <Header />
+      <TravauxHeader />
       <Container className="mt--7" fluid>
         <Row className="mt-5">
           <div className="col">

@@ -17,9 +17,11 @@
 */
 
 // reactstrap components
+import { Link } from "react-router-dom";
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import Demande from "views/examples/Demande";
 
-const StatsHeader = ({valide,rejet,ressource,total}) => {
+const TravauxHeader = () => {
   return (
     <>
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
@@ -27,6 +29,7 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
           <div className="header-body">
           <Row>
               <Col lg="6" xl="3">
+              <Link to="/DPR_SAF/Planification/en_cours">
                 <Card className="card-stats mb-4 mb-xl-0">
                   <CardBody>
                     <Row>
@@ -35,29 +38,22 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Demandes validées
+                          
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
-                        {valide.nombre}
-                        </span>
+                        Travaux en cours
                       </div>
                       <Col className="col-auto">
-                        <div className="icon icon-shape bg-success text-white rounded-circle shadow">
-                          <i className="ni ni-check-bold" />
+                        <div className="icon icon-shape bg-green text-white rounded-circle shadow">
+                          <i className="ni ni-settings" />
                         </div>
                       </Col>
                     </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
-                       
-                        {valide.pourcentage} %
-                      </span>{" "}
-                     
-                    </p>
                   </CardBody>
                 </Card>
-              </Col>
-              <Col lg="6" xl="3">
+              </Link>
+            </Col>
+            <Col lg="6" xl="3">
+              <Link to="/DPR_SAF/Planification/travaux">
                 <Card className="card-stats mb-4 mb-xl-0">
                   <CardBody>
                     <Row>
@@ -66,29 +62,21 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Demandes rejettées
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
-                        {rejet.nombre}
-                        </span>
+                        Travaux planifiés
                       </div>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-red text-white rounded-circle shadow">
-                          <i className="ni ni-fat-remove" />
+                          <i className="ni ni-settings" />
                         </div>
                       </Col>
                     </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
-                       
-                        {rejet.pourcentage} %
-                      </span>{" "}
-                     
-                    </p>
                   </CardBody>
                 </Card>
-              </Col>
-              <Col lg="6" xl="3">
+              </Link>
+            </Col>
+            <Col lg="6" xl="3">
+            <Link to="/DPR_SAF/Travaux/termine">
               <Card className="card-stats mb-4 mb-xl-0">
                 <CardBody>
                   <Row>
@@ -97,26 +85,21 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                         tag="h5"
                         className="text-uppercase text-muted mb-0"
                       >
-                        Valeur dépensée en ressource
                       </CardTitle>
-                      <span className="h2 font-weight-bold mb-0">
-                      {total} Ar
-                      </span>
+                      Travaux receptionnés
                     </div>
                     <Col className="col-auto">
                       <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                        <i className="ni ni-money-coins" />
+                        <i className="ni ni-settings" />
                       </div>
                     </Col>
                   </Row>
-                  <p className="mt-3 mb-0 text-muted text-sm">
-                   
-                   
-                  </p>
                 </CardBody>
               </Card>
-            </Col>
+            </Link>
+          </Col>
               </Row>
+              
           </div>
         </Container>
       </div>
@@ -124,4 +107,4 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
   );
 };
 
-export default StatsHeader;
+export default TravauxHeader;

@@ -2,6 +2,7 @@ import Header from 'components/Headers/Header';
 import { useNavigate } from 'react-router-dom'; // Importer useNavigate si vous utilisez React Router v6
 import { useEffect, useState } from 'react';
 import { Badge, Button, Card, CardHeader, Container, DropdownItem, DropdownMenu, DropdownToggle, Media, Row, Table, UncontrolledDropdown } from 'reactstrap';
+import DemandeHeader from 'components/Headers/DemandeHeader';
 
 const Pris_en_Charge = () => {
   const [demandes, setDemandes] = useState([]);
@@ -41,14 +42,14 @@ const Pris_en_Charge = () => {
 
   return (
     <>
-      <Header />
+      <DemandeHeader />
       <Container className="mt--7" fluid>
         <Row className="mt-5">
           <div className="col">
             <Card className="bg-default shadow">
-            <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
+              <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
                 <h3 className="text-white mb-0">Demandes prises en charge</h3>
-<div>
+                <div>
                   <Button color="info" size="sm" onClick={sortByDateAsc}>
                   <i className="ni ni-bold-up" />
                   </Button>

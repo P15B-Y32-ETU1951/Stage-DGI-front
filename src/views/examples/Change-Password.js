@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Card,
@@ -16,15 +16,12 @@ import {
 } from "reactstrap";
 
 
-const Register = () => {
+const ChangePassword = () => {
+    const{ id}=useParams();
   const [utilisateur, setUtilisateur] = useState({
-    nom: "",
-    email: "",
+    id: id,
     password: "",
     confirmPassword: "", 
-    prenom: "",
-    service: "",
-    role: "AGENT"
   });
 
   const [service, setService] = useState([]); // État pour stocker les services
@@ -89,7 +86,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/v1/auth/signup', {
+      const response = await fetch('http://localhost:8080/api/v1/auth/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -105,8 +102,9 @@ const Register = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Utilisateur créé", data);
-        navigate("/login");
+        console.log("mdp mis A jour:", data);
+        const authRole=localStorage.getItem('authRole');
+        navigate(`/${authRole}/index`);
       } else {
         setError("Une erreur est survenue lors de l'inscription.");
       }
@@ -120,94 +118,20 @@ const Register = () => {
     <>
       <Col lg="6" md="8">
         <Card className="border-0 shadow bg-secondary">
-          <CardHeader className="pb-5 bg-transparent"></CardHeader>
+          <CardHeader className="pb-5 bg-transparent">
+          <div class="alert alert-warning" role="alert">
+          <span class="alert-icon"><i class="ni ni-bold-down"></i></span>
+          <span class="alert-text"><strong>Mot de passe expiré</strong> </span>
+      </div>
+          </CardHeader>
           <CardBody className="px-lg-5 py-lg-5">
             <Form role="form" onSubmit={handleSubmit}>
-              <FormGroup>
-                <InputGroup className="mb-3 input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-hat-3" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Nom"
-                    type="text"
-                    name="nom"
-                    onChange={handleInputChange}
-                  />
-                </InputGroup>
-              </FormGroup>
-              <FormGroup>
-                <InputGroup className="mb-3 input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-hat-3" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Prénom"
-                    type="text"
-                    name="prenom"
-                    onChange={handleInputChange}
-                  />
-                </InputGroup>
-              </FormGroup>
-              <FormGroup>
-                <InputGroup className="mb-3 input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-email-83" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Email"
-                    type="email"
-                    name="email"
-                    onChange={handleInputChange}
-                  />
-                </InputGroup>
-              </FormGroup>
+              
+             
+             
 
-              {/* Champ select pour les services */}
-              <FormGroup>
-                <InputGroup className="mb-3 input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-briefcase-24" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    type="select"
-                    name="service"
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Sélectionner un service</option>
-                    {service.map(service => (
-                      <option key={service.id} value={service.id}>
-                        {service.nom}
-                      </option>
-                    ))}
-                  </Input>
-                </InputGroup>
-              </FormGroup>
-              <FormGroup>
-                <InputGroup className="mb-3 input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-single-02" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    type="select"
-                    name="role"
-                    onChange={handleInputChange}
-                  >
-                    <option value="AGENT">Agent</option>
-                    <option value="CHEF_SERVICE">Chef de Service</option>\
-                  </Input>
-                </InputGroup>
-              </FormGroup>
+             
+              
               <FormGroup>
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -216,7 +140,7 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Mot de passe"
+                    placeholder="Entrez votre nouveau Mot de passe"
                     type="password"
                     name="password"
                     onChange={handleInputChange}
@@ -247,7 +171,7 @@ const Register = () => {
 
               <div className="text-center">
                 <Button className="mt-4" color="primary" type="submit">
-                  S'inscrire
+                  Enregistrer
                 </Button>
               </div>
             </Form>
@@ -258,4 +182,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ChangePassword;

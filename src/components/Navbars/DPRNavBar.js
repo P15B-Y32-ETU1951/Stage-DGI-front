@@ -81,7 +81,7 @@ const DPRNavbar = (props) => {
           </Link>
           <Link
             className="h4 mb-0 text-white "
-            to="/DPR_SAF/Statistique"
+            to="/DPR_SAF/index"
           >
             Statistiques
           </Link>

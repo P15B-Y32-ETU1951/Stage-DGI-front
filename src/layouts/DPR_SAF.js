@@ -6,6 +6,7 @@ import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import routes from "routes.js";
 import Sidebar_notif from "components/Sidebar/Sidebar_notif";
+import Sidebar2 from "components/Sidebar/Sidebar2";
 
 const DPR_SAF = (props) => {
   const mainContent = React.useRef(null);
@@ -57,8 +58,13 @@ const DPR_SAF = (props) => {
         route.name!== "Rapport" &&
         route.name!== "Historique" &&
         route.name!== "upload" &&
-        route.name!== "Statistique" 
-
+        route.name!== "Statistique" &&
+        route.name!== "pec" &&
+        route.name!=="valide" &&
+        route.name!=="Demandes " &&
+        route.name!=="T1" &&
+        route.name!=="T2" &&
+        route.name!=="Documents"
        
 
 
@@ -68,15 +74,15 @@ const DPR_SAF = (props) => {
   return (
     <>
       <div className="wrapper d-flex flex-column min-vh-100"> {/* Wrapper Flexbox */}
-        <Sidebar_notif
-          {...props}
-          routes={getSidebarRoutes(routes)}
-          logo={{
-            innerLink: "/DPR_SAF/index",
-            imgSrc: require("../assets/img/brand/argon-react.png"),
-            imgAlt: "...",
-          }}
-        />
+      <Sidebar_notif
+      {...props}
+      routes={getSidebarRoutes(routes)}
+      logo={{
+        innerLink: "/DPR_SAF/index",
+        imgSrc: require("../assets/img/brand/argon-react.png"),
+        imgAlt: "...",
+      }}
+    />
         <div className="main-content flex-grow-1" ref={mainContent}> {/* Ensure main content grows */}
           <DPRNavbar
             {...props}

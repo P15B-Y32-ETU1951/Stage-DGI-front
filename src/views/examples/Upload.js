@@ -1,6 +1,6 @@
 import UserHeader from "components/Headers/UserHeader";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Card,
@@ -10,42 +10,85 @@ import {
   Row,
   Col,
   Input,
+  FormGroup,
 } from "reactstrap";
 
 const UploadFileComponent = () => {
   const [file, setFile] = useState(null);
-  const id=useParams();
+  const { id } = useParams(); // Récupérer l'ID de la demande depuis l'URL
+  const navigate = useNavigate(); // Utilisé pour naviguer vers une autre page
 
+  // Fonction pour gérer la sélection du fichier
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
+  // Fonction pour gérer l'upload
   const handleUpload = async () => {
-    if (!file) return;
+    if (!file) {
+      alert("Veuillez sélectionner un fichier avant de l'importer.");
+      return;
+    }
   
+    // Utiliser FormData pour envoyer le fichier au backend
+    const formData = new FormData();
+    formData.append('file', file); // Le fichier lui-même
+    formData.append('id', id); // L'ID de la demande
+  
+    const authToken = localStorage.getItem('authToken');
+    const authRole = localStorage.getItem('authRole');
+  
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/rapport`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData, // Envoyer formData
+      });
+  
+      if (response.ok) {
+        alert("Rapport importé avec succès");
+        navigate(`/${authRole}/Travaux/rapport`)
+      } else {
+        console.error('Erreur lors de l\'importation du rapport:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erreur réseau:', error);
+    }
   };
+  
 
   return (
     <>
-   
-    <UserHeader />
-    <Container className="mt--7" fluid>
-      <Row className="justify-content-center">
-        <Col xl="8">
-          <Card className="card-profile shadow">
-            <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-              <h3>Uploader un Fichier</h3>
-            </CardHeader>
-            <CardBody className="pt-0 pt-md-4">
-              <div className="text-center">
-                <Input type="file" onChange={handleFileChange} className="mb-3" />
-                <Button color="primary" onClick={handleUpload}>Upload</Button>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+      <UserHeader />
+      <Container className="mt--7" fluid>
+        <Row className="justify-content-center">
+          <Col xl="8">
+            <Card className="bg-secondary shadow-sm mb-4">
+              <CardHeader className="bg-default">
+                <h3 className="mb-0 text-white">Rapport des Travaux effectués</h3>
+              </CardHeader>
+              <CardBody>
+                <FormGroup>
+                  <label className="btn btn-sm btn-primary">
+                    <i className="fas fa-search" /> Choisissez un fichier
+                    <input
+                      type="file"
+                      style={{ display: 'none' }}
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                  {file && <p className="mt-2">Fichier sélectionné : {file.name}</p>}
+                </FormGroup>
+                <Button color="warning" onClick={handleUpload}>
+                  <i className="ni ni-cloud-upload-96" /> Importer le Rapport
+                </Button>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };

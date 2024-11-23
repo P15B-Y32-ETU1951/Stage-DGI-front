@@ -36,11 +36,35 @@ import {
   Alert,
 } from "reactstrap";
 import newLogo from "../../assets/img/theme/DGI.png";
+import DashboardAlert from "views/examples/DashboardAlert";
 
 const Sidebar_notif = (props) => {
   const token = localStorage.getItem('authToken');
   const [unplannedDemands, setUnplannedDemands] = useState(0);
+  const [planif, setPlanif] = useState(false);
+  const [nb,setNb]=useState(0);
+  const [demandes, setDemandes] = useState([]);
+  const [reclam,setReclam] = useState([]);
 
+  useEffect(() => {
+    const fetchDemandes = async () => {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        const authRole = localStorage.getItem('authRole');
+        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/termine`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+        const data = await response.json();
+        setDemandes(data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des demandes:', error);
+      }
+    };
+
+    fetchDemandes();
+  }, []);
   // Fonction pour récupérer les demandes validées et vérifier les non-planifiées
   const fetchValidatedDemands = async () => {
     try {
@@ -77,7 +101,8 @@ const Sidebar_notif = (props) => {
 
       setUnplannedDemands(outdatedUnplannedDemands.length);
       if (outdatedUnplannedDemands.length > 0) {
-        window.alert(`Il y a ${outdatedUnplannedDemands.length} demande(s) validée(s) non planifiées depuis plus de 7 jours.`);
+       setPlanif(true);
+       setNb(outdatedUnplannedDemands.length);
       }
     } catch (error) {
       console.error('Erreur lors de la récupération des demandes validées :', error);
@@ -92,6 +117,7 @@ const Sidebar_notif = (props) => {
   const [newNotifications, setNewNotifications] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [notificationIds, setNotificationIds] = useState([]);
+  const [isNotif, setIsNotif] = useState( false );                      
 
   // Fonction pour récupérer les notifications
   const fetchNotifications = async () => {
@@ -109,6 +135,11 @@ const Sidebar_notif = (props) => {
       const ids = data.map(notification => notification.id);
       setNotificationIds(ids);
       setNewNotifications(data.length);
+      if(data.length >0){
+        setIsNotif(true);
+      }
+
+      
     } catch (error) {
       console.error('Erreur lors de la récupération des notifications :', error);
     }
@@ -117,7 +148,20 @@ const Sidebar_notif = (props) => {
   // Récupérer les notifications au montage
   useEffect(() => {
     fetchNotifications();
-  }, [token]);
+    
+    
+      const reclamation = demandes.filter(demande => {
+        // Vérifier s'il existe un statut avec `statut.id === 10`
+        const hasStatusId10 = demande.statutDemandes.some(status => status.statut.id === 10);
+        
+        if (hasStatusId10) {
+          setReclam(true);
+        }
+      
+        return false;
+      })
+    
+  }, [token,demandes]);
 
   const markNotificationsAsSeen = async () => {
     try {
@@ -181,7 +225,7 @@ const Sidebar_notif = (props) => {
   }
 
   return (
-    <Navbar className="navbar-vertical fixed-left navbar-light bg-white" expand="md" id="sidenav-main">
+    <Navbar className="bg-white navbar-vertical fixed-left navbar-light" expand="md" id="sidenav-main">
       <Container fluid>
         <button className="navbar-toggler" type="button" onClick={toggleCollapse}>
           <span className="navbar-toggler-icon" />
@@ -216,7 +260,7 @@ const Sidebar_notif = (props) => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-arrow" right>
               <DropdownItem className="noti-title" header tag="div">
-                <h6 className="text-overflow m-0">Welcome!</h6>
+                <h6 className="m-0 text-overflow">Welcome!</h6>
               </DropdownItem>
               <DropdownItem to="/admin/user-profile" tag={Link}>
                 <i className="ni ni-single-02" />
@@ -282,9 +326,9 @@ const Sidebar_notif = (props) => {
           <Nav navbar>
             {/* Badge des notifications */}
             <NavItem>
-              <NavLink to="/DPR_SAF/index" tag={NavLinkRRD} onClick={closeCollapse}>
+              <NavLink to="/DPR_SAF/Demande" tag={NavLinkRRD} onClick={closeCollapse}>
                 <i className="ni ni-email-83 text-blue" />
-                Demandes reçues
+                Demandes 
                 {newNotifications > 0 && (
                   <Badge color="danger" pill className="ml-2">
                     {newNotifications}
@@ -294,7 +338,21 @@ const Sidebar_notif = (props) => {
             </NavItem>
             {createLinks(routes)}
           </Nav>
-
+          {
+            planif===true &&(
+              <DashboardAlert  titre={'Demandes non planifiées'} message={`vous avez ${nb} demandes validée(s) non planifiées depuis plus de 7 jours `} link={'/DPR_SAF/demande/valide'}/>
+            )
+          }
+          {
+            isNotif===true &&(
+              <DashboardAlert  titre={'Nouvelles demandes'} message={`vous avez ${newNotifications} nouvelles demandes de travaux `} link={'/DPR_SAF/Demande'}/>
+            )
+          }
+          {
+            reclam===true &&(
+              <DashboardAlert  titre={'Reclamation'} message={`vous avez des reclamations sur des  travaux `} link={'/DPR_SAF/Travaux/termine'}/>
+            )
+          }
           <hr className="my-3" />
         </Collapse>
       </Container>

@@ -6,12 +6,12 @@ import { Badge, Button, Card, CardHeader, Container, DropdownItem, DropdownMenu,
 const Rapport = () => {
   const [demandes, setDemandes] = useState([]);
   const navigate = useNavigate(); // Utilisation du hook useNavigate
-
+  const authToken = localStorage.getItem('authToken');
+  const authRole = localStorage.getItem('authRole');
   useEffect(() => {
     const fetchDemandes = async () => {
       try {
-        const authToken = localStorage.getItem('authToken');
-        const authRole = localStorage.getItem('authRole');
+      
         const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/9`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
@@ -27,67 +27,77 @@ const Rapport = () => {
     fetchDemandes();
   }, []);
 
-  const MAX_DESCRIPTION_LENGTH = 15;
-
-  const handleSubmit = async (id) => {
+  const openFile = (rapportId) => {
+  const url = `http://localhost:8080/api/v1/${authRole}/download/${rapportId}`;
+  
+  // Ouvrir un nouvel onglet
+  const newTab = window.open('', '_blank');
+  
+  // Effectuer la requête fetch pour récupérer le fichier PDF
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${authToken}`, // Envoyer le token dans l'en-tête
+    },
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch the file');
+    }
+    return response.blob(); // Traiter la réponse en tant que Blob
+  })
+  .then(blob => {
+    // Créer une URL Blob pour le fichier téléchargé
+    const fileURL = URL.createObjectURL(blob);
     
-   
+    // Ouvrir l'URL Blob dans le nouvel onglet
+    newTab.location.href = fileURL;
+  })
+  .catch(error => console.error('Error opening file:', error));
+};
+  const handleFileChange = async (event, demandeId) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    // Récupérer les valeurs du localStorage
-    const service = localStorage.getItem('authService');
-    const utilisateurId = localStorage.getItem('authId');
+    const formData = new FormData();
+    formData.append('file', file);
+
     const authToken = localStorage.getItem('authToken');
-    const role = localStorage.getItem('authRole');
+    const authRole = localStorage.getItem('authRole');
 
-
-    if (!service || !utilisateurId) {
-        console.error("Service ou utilisateur non trouvé dans le localStorage");
-        return;
-    }
-
-    // Reformatage de la date au format YYYY-MM-DD
-   
-    const data = {
-        "statut":7,
-        "id_demande":id
-    }
-   
-    // Créer un objet avec les valeurs de l'état
-
-    // Envoyer la requête POST à l'URL appropriée
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${role}/demande/statut`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`,
-            },
-            body: JSON.stringify(data),
-        });
+      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/${demandeId}/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: formData,
+      });
 
-        if (response.ok) {
-            console.log('Demande validée avec succès');
-            navigate(`/${role}/Planification/travaux`);
-            // Reset des champs du formulaire
-        } else {
-            console.error('Erreur lors de l\'envoi de la demande:',response.statusText );
-           
-        }
-        navigate(`/${role}/Planification/en_cours`);
+      if (response.ok) {
+        console.log('Rapport importé avec succès');
+        // Rafraîchir la liste des demandes après l'importation
+        const updatedDemandes = demandes.map(demande =>
+          demande.id === demandeId ? { ...demande, rapport: true } : demande
+        );
+        setDemandes(updatedDemandes);
+      } else {
+        console.error('Erreur lors de l\'importation du rapport:', response.statusText);
+      }
     } catch (error) {
-        console.error('Erreur réseau:', error);
+      console.error('Erreur réseau:', error);
     }
-};
-const sortByDateAsc = () => {
-  const sortedDemandes = [...demandes].sort((a, b) => new Date(a.date) - new Date(b.date));
-  setDemandes(sortedDemandes);
-};
+  };
 
-// Fonction pour trier les demandes par date (décroissant)
-const sortByDateDesc = () => {
-  const sortedDemandes = [...demandes].sort((a, b) => new Date(b.date) - new Date(a.date));
-  setDemandes(sortedDemandes);
-};
+  const sortByDateAsc = () => {
+    const sortedDemandes = [...demandes].sort((a, b) => new Date(a.date) - new Date(b.date));
+    setDemandes(sortedDemandes);
+  };
+
+  const sortByDateDesc = () => {
+    const sortedDemandes = [...demandes].sort((a, b) => new Date(b.date) - new Date(a.date));
+    setDemandes(sortedDemandes);
+  };
 
   return (
     <>
@@ -96,15 +106,14 @@ const sortByDateDesc = () => {
         <Row className="mt-5">
           <div className="col">
             <Card className="bg-default shadow">
-             
               <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
-              <h3 className="text-white mb-0">Rapports des Travaux</h3>
+                <h3 className="text-white mb-0">Rapports des Travaux</h3>
                 <div>
                   <Button color="info" size="sm" onClick={sortByDateAsc}>
-                  <i className="ni ni-bold-up" />
+                    <i className="ni ni-bold-up" />
                   </Button>
                   <Button color="info" size="sm" onClick={sortByDateDesc} className="ml-2">
-                  <i className="ni ni-bold-down" />
+                    <i className="ni ni-bold-down" />
                   </Button>
                 </div>
               </CardHeader>
@@ -116,7 +125,7 @@ const sortByDateDesc = () => {
                     <th scope="col">Date de début</th>
                     <th scope="col">Date de fin</th>
                     <th scope="col">Coût des travaux</th>
-                    <th scope="col">Statut</th>
+                    <th scope="col">Rapport</th>
                     <th scope="col" />
                   </tr>
                 </thead>
@@ -128,25 +137,35 @@ const sortByDateDesc = () => {
                           <Media className="align-items-center">
                             <Media>
                               <span className="mb-0 text-sm">
-                                {demande.service.nom} 
+                                {demande.service.nom}
                               </span>
                             </Media>
                           </Media>
                         </th>
                         <td>{demande.motif}</td>
+                        <td>{demande.planification.dateDebut}</td>
+                        <td>{demande.planification.dateFin}</td>
+                        <td>{demande.travaux.total} Ar</td>
                         <td>
-                          {demande.planification.dateDebut}
-                        </td>
-                        <td>
-                          {demande.planification.dateFin}
-                        </td>
-                        <td>
-                          {demande.travaux.total} Ar
-                        </td>
-                        <td>
-                            {demande.statut.description} 
-                        </td>
-                         
+                        {!demande.rapport ? (
+                          <button
+                            className="btn btn-sm btn-info"
+                            onClick={() => navigate(`/DPR_SAF/Rapport/upload/${demande.id}`)}
+                          >
+                            <i className="ni ni-cloud-download-95" />  Importer le rapport
+                          </button>
+                        ) : (
+                          <button
+                          className="btn btn-sm btn-success"
+                          
+                            onClick={() =>
+                              navigate(`/DPR_SAF/Document/${demande.id}`)
+                            }
+                          >
+                          <i className="ni ni-cloud-upload-96" /> Consulter le rapport
+                          </button>
+                        )}
+                      </td>
                         <td className="text-right">
                           <UncontrolledDropdown>
                             <DropdownToggle
@@ -161,7 +180,8 @@ const sortByDateDesc = () => {
                             </DropdownToggle>
                             <DropdownMenu className="dropdown-menu-arrow" right>
                               <DropdownItem
-                               onClick={() => navigate(`/DPR_SAF/Planification/travaux/${demande.id}`)}>
+                                onClick={() => navigate(`/DPR_SAF/Planification/travaux/${demande.id}`)}
+                              >
                                 Detail
                               </DropdownItem>
                             </DropdownMenu>
@@ -171,7 +191,7 @@ const sortByDateDesc = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="5" className="text-center">Aucun Travaux receptionné</td>
+                      <td colSpan="7" className="text-center">Aucun Travaux receptionné</td>
                     </tr>
                   )}
                 </tbody>

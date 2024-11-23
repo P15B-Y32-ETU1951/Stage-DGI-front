@@ -6,9 +6,12 @@ import StatsHeader from 'components/Headers/StatsHeader';
 import { BarChart } from '@mui/x-charts/BarChart'; // Import du BarChart
 import { now } from 'moment';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import DashboardAlert from './DashboardAlert';
+import AlertNotification from './AlertNotification';
 
 
 const Statistique = () => {
+  const [total,setTotal]=useState();
   const authToken = localStorage.getItem('authToken');
   const authRole = localStorage.getItem('authRole');
   const [demandes, setDemandes] = useState([]);
@@ -123,6 +126,7 @@ const Statistique = () => {
       setPieData(demandesParStatut);
     };
     const CalculRessourceTravaux = () => {
+      
       // Calcul du budget total pour chaque ressource
       const barData = ressource.map((res) => {
         console.log('ressource:',res);
@@ -145,6 +149,8 @@ const Statistique = () => {
       });
     
       setBarData(barData);
+      const totalGlobal = barData.reduce((acc, curr) => acc + curr.value, 0);
+      setTotal(totalGlobal);
       
       // Mettre à jour l'état avec les nouvelles données
     };
@@ -155,7 +161,7 @@ const Statistique = () => {
       const demandesValides = demandes.filter(demande => demande.statut.id >=6 || demande.statut.id === 4).length;
       const validePercentage = ((demandesValides / totalDemandes) * 100).toFixed(2);
       const data={
-          nombre:totalDemandes,
+          nombre:demandesValides,
           pourcentage:validePercentage
       };
       setValide(data);
@@ -168,108 +174,89 @@ const Statistique = () => {
       setRejet(data1);
      
     };
+
     CalculDemandeValide();
     console.log('ressource travaux',ressource_travaux);
     console.log('bardata',barData);
     calculateDemandesParStatut();
 
-    const calculerTravauxParMois = () => {
-      const travauxParMois = mois.map((mois) => ({
-        month: mois,
-        cloturee: 0,
-        terminee: 0,
-        enCours: 0,
-      }));
+    const getMonthsBetween = (start, end) => {
+      const months = [];
+      const startDate = new Date(start);
+      const endDate = new Date(end);
     
-      const getMonthsBetween = (start, end) => {
-        const months = [];
-        const startDate = new Date(start);
-        const endDate = new Date(end);
-        
-        if (isNaN(startDate) || isNaN(endDate)) {
-          console.error("Dates invalides :", { start, end });
-          return months;
-        }
-        
-        while (startDate <= endDate) {
-          months.push(startDate.getMonth()); // Ajoute le mois actuel (0-11)
-          startDate.setMonth(startDate.getMonth() + 1);
-      
-          // Vérifie si le mois est le même que la date de fin
-          if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear()) {
-            months.push(startDate.getMonth()); // Ajoute le mois de la date de fin si non présent
-            break;
-          }
-        }
-        
+      if (isNaN(startDate) || isNaN(endDate)) {
+        console.error("Dates invalides :", { start, end });
         return months;
-      };
-      
+      }
     
-      // Fonction pour vérifier et corriger le format des dates
-      const parseDate = (dateStr) => {
-        const parsedDate = Date.parse(dateStr);
-        if (!isNaN(parsedDate)) {
-          return new Date(parsedDate);
-        } else {
-          console.error("Format de date non supporté :", dateStr);
-          return null;
-        }
-      };
+      // Parcours chaque mois entre startDate et endDate
+      while (startDate <= endDate) {
+        // Formater comme 'Jan 2024'
+        months.push(`${mois[startDate.getMonth()]} ${startDate.getFullYear()}`);
+        // Passer au mois suivant
+        startDate.setMonth(startDate.getMonth() + 1);
+      }
     
-      // Remplir les données
+      return months;
+    };
+    
+    const mois = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const calculerTravauxParMois = () => {
+      const travauxParMois = {};
+    
       demandes.forEach((demande) => {
-        let moisIndex;
-        let datedebut = null;
-        let datefin = null;
+        let datedebut = demande.planification?.dateDebut
+          ? new Date(demande.planification.dateDebut)
+          : null;
+        let datefin = demande.planification?.dateFin
+          ? new Date(demande.planification.dateFin)
+          : null;
     
-        // Convertir les dates uniquement si elles existent
-        if (demande.planification?.dateDebut) {
-          datedebut = parseDate(demande.planification.dateDebut);
-        }
+        if (datedebut && datefin) {
+          const moisEntre = getMonthsBetween(datedebut, datefin);
     
-        if (demande.planification?.dateFin) {
-          datefin = parseDate(demande.planification.dateFin);
-        }
-    
-        // Calculer les mois entre deux dates si les dates sont valides
-        const moisIndices = datedebut && datefin ? getMonthsBetween(datedebut, datefin) : [];
-    
-        if (demande.statut.id === 9) {
-          // Statut clôturée
-          moisIndices.forEach((moisIndex) => {
-            travauxParMois[moisIndex].enCours++;
-            if (moisIndex === moisIndices[moisIndices.length - 1]) {
-              travauxParMois[moisIndex].terminee++;
-              travauxParMois[moisIndex].cloturee++;
-              console.log('date de cloture:',moisIndices[moisIndices.length - 1],'demande',demande.motif);
-              console.log('mois:',moisIndices,'id',demande.motif);
-              if(demande.id===2402){
-                console.log('date fin:',parseDate(demande.planification.dateFin),'demande date debut',parseDate(demande.planification.dateDebut),'demande date fin',parseDate(demande.planification.dateFin),'months:',getMonthsBetween(datedebut, datefin));
-              }
+          moisEntre.forEach((moisAnnee) => {
+            if (!travauxParMois[moisAnnee]) {
+              travauxParMois[moisAnnee] = { cloturee: 0, terminee: 0, enCours: 0 };
             }
-          });
-        } else if (demande.statut.id === 8) {
-          // Statut terminée
-          if (datefin instanceof Date && !isNaN(datefin)) {
-            moisIndices.forEach((moisIndex) => {
-              travauxParMois[moisIndex].enCours++;
-              if (moisIndex === moisIndices[moisIndices.length - 1]) {
-                travauxParMois[moisIndex].terminee++;
+    
+            if (demande.statut.id === 9) {
+              travauxParMois[moisAnnee].enCours++;
+              if (moisAnnee === moisEntre[moisEntre.length - 1]) {
+                travauxParMois[moisAnnee].terminee++;
+                travauxParMois[moisAnnee].cloturee++;
               }
-            });
-          }
-        } else if (demande.statut.id === 7) {
-          // Statut en cours
-          const moisInd = datedebut ? getMonthsBetween(datedebut, new Date()) : [];
-          moisInd.forEach((moisIndex) => {
-            travauxParMois[moisIndex].enCours++;
+            } else if (demande.statut.id === 8) {
+              travauxParMois[moisAnnee].enCours++;
+              if (moisAnnee === moisEntre[moisEntre.length - 1]) {
+                travauxParMois[moisAnnee].terminee++;
+              }
+            } else if (demande.statut.id === 7) {
+              travauxParMois[moisAnnee].enCours++;
+            }
           });
         }
       });
     
-      console.log("Travaux par mois :", travauxParMois);
-      setTravauxParMois(travauxParMois);
+      // Convertir en tableau, trier par mois et année
+      const travauxParMoisArray = Object.entries(travauxParMois)
+        .map(([monthYear, data]) => ({
+          month: monthYear,
+          ...data,
+        }))
+        .sort((a, b) => {
+          const [monthA, yearA] = a.month.split(" ");
+          const [monthB, yearB] = b.month.split(" ");
+    
+          const dateA = new Date(parseInt(yearA), mois.indexOf(monthA), 1);
+          const dateB = new Date(parseInt(yearB), mois.indexOf(monthB), 1);
+    
+          return dateA - dateB;
+        });
+    
+      setTravauxParMois(travauxParMoisArray);
     };
     
     
@@ -290,13 +277,16 @@ const Statistique = () => {
   
   return (
     <>
-      <StatsHeader valide={valide} rejet={rejet} />
+  
+      <StatsHeader valide={valide} rejet={rejet} total={total} />
+
       <Container className="mt--7" fluid>
         <Row className="mt-5">
           <Col>
+          
             <Card className="bg-white">
-              <CardHeader className="bg-default border-0 d-flex justify-content-between align-items-center">
-                <h3 className="text-white mb-0">Statistique des demandes par statut</h3>
+              <CardHeader className="border-0 bg-default d-flex justify-content-between align-items-center">
+                <h3 className="mb-0 text-white">Statistique des demandes par statut</h3>
               </CardHeader>
               <CardBody>
                 <PieChart
@@ -321,9 +311,9 @@ const Statistique = () => {
               </CardBody>
             </Card>
             <hr />
-            <Card className="bg-white mt-5">
-              <CardHeader className="bg-default border-0 d-flex justify-content-between align-items-center">
-                <h3 className="text-white mb-0">Valeur budgetaire  des ressources utilisées</h3>
+            <Card className="mt-5 bg-white">
+              <CardHeader className="border-0 bg-default d-flex justify-content-between align-items-center">
+                <h3 className="mb-0 text-white">Valeur budgetaire  des ressources utilisées</h3>
               </CardHeader>
               <CardBody>
                 <BarChart
@@ -336,10 +326,10 @@ const Statistique = () => {
                 />
               </CardBody>
             </Card>
-            <Card className="bg-white mt-5">
-          <CardHeader className="bg-default border-0 d-flex justify-content-between align-items-center">
-            <h3 className="text-white mb-0">Statistiques des Travaux par Mois</h3>
-          </CardHeader>
+            <Card className="mt-5 bg-white">
+            <CardHeader className="border-0 bg-default d-flex justify-content-between align-items-center">
+              <h3 className="mb-0 text-white">Statistiques des Travaux par Mois</h3>
+            </CardHeader>
             <CardBody>
               <BarChart
                 dataset={travauxParMois}
@@ -359,7 +349,7 @@ const Statistique = () => {
                 }}
               />
             </CardBody>
-            </Card>
+          </Card>
           </Col>
         </Row>
       </Container>

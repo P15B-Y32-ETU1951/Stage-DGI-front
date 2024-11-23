@@ -16,7 +16,7 @@
 
 */
 /*eslint-disable*/
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
@@ -53,15 +53,8 @@ import {
 } from "reactstrap";
 
 var ps;
-import newLogo from "../../assets/img/theme/DGI.png";
-import DashboardAlert from "views/examples/DashboardAlert";
-
 
 const Sidebar = (props) => {
-  const token = localStorage.getItem('authToken');
-  const [unplannedDemands, setUnplannedDemands] = useState(0);
-  const [notif, setNotif] = useState(false);
-
   const [collapseOpen, setCollapseOpen] = useState();
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -75,61 +68,6 @@ const Sidebar = (props) => {
   const closeCollapse = () => {
     setCollapseOpen(false);
   };
-
-
-  const fetchValidatedDemands = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/api/v1/CHEF_SERVICE/demande/8', {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-
-      if (!response.ok) throw new Error('Erreur réseau lors de la récupération des demandes validées');
-
-      const demands = await response.json();
-      const now = new Date();
-
-      // Filtre pour les demandes validées depuis plus de 7 jours et non planifiées
-      const outdatedUnplannedDemands = demands.filter(demande => {
-        // Filtrer les statuts avec `statut.id === 8`
-        const statusWithId8 = demande.statutDemandes
-          .filter(status => status.statut.id === 8);
-      
-        // Trouver le statut avec la date la plus récente
-        if (statusWithId8.length > 0) {
-          const latestStatusWithId8 = statusWithId8.reduce((latest, current) => {
-            const latestDate = new Date(latest.date_changement);
-            const currentDate = new Date(current.date_changement);
-            return currentDate > latestDate ? current : latest;
-          });
-      
-          const changeDate = new Date(latestStatusWithId8.date_changement);
-          console.log(changeDate);
-          console.log(now);
-          const daysSinceStatusChange = (now - changeDate) / (1000 * 60 * 60 * 24);
-          console.log(daysSinceStatusChange);
-          return daysSinceStatusChange > 7 ;
-        }
-      
-        return false;
-      });
-      
-      setUnplannedDemands(outdatedUnplannedDemands.length);
-      
-      if (outdatedUnplannedDemands.length > 0) {
-       // window.alert(`Il y a ${outdatedUnplannedDemands.length} travaux terminé(s) depuis plus de 7 jours en attente de vos retours.`);
-        setNotif(true);
-      }
-      
-      
-    } catch (error) {
-      console.error('Erreur lors de la récupération des demandes validées :', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchValidatedDemands();
-  }, [token]);
-
   // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
@@ -164,7 +102,7 @@ const Sidebar = (props) => {
 
   return (
     <Navbar
-      className="bg-white navbar-vertical fixed-left navbar-light"
+      className="navbar-vertical fixed-left navbar-light bg-white"
       expand="md"
       id="sidenav-main"
     >
@@ -179,15 +117,13 @@ const Sidebar = (props) => {
         </button>
         {/* Brand */}
         {logo ? (
-         <NavbarBrand className="pt-0" {...navbarBrandProps}>
-         <img alt="Votre Logo" className="navbar-brand-img" src={newLogo} />
-         <span className="navbar-brand-text">
-         
-           <p>Direction Générale des Impôts</p>
-          
-         </span>
-       </NavbarBrand>
-       
+          <NavbarBrand className="pt-0" {...navbarBrandProps}>
+            <img
+              alt={logo.imgAlt}
+              className="navbar-brand-img"
+              src={logo.imgSrc}
+            />
+          </NavbarBrand>
         ) : null}
         {/* User */}
         <Nav className="align-items-center d-md-none">
@@ -219,7 +155,7 @@ const Sidebar = (props) => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-arrow" right>
               <DropdownItem className="noti-title" header tag="div">
-                <h6 className="m-0 text-overflow">Welcome!</h6>
+                <h6 className="text-overflow m-0">Welcome!</h6>
               </DropdownItem>
               <DropdownItem to="/admin/user-profile" tag={Link}>
                 <i className="ni ni-single-02" />
@@ -254,13 +190,11 @@ const Sidebar = (props) => {
                 <Col className="collapse-brand" xs="6">
                   {logo.innerLink ? (
                     <Link to={logo.innerLink}>
-                     <img alt="Votre Logo" className="navbar-brand-img" src={newLogo} />
-
+                      <img alt={logo.imgAlt} src={logo.imgSrc} />
                     </Link>
                   ) : (
                     <a href={logo.outterLink}>
-                    <img alt="Votre Logo" className="navbar-brand-img" src={newLogo} />
-
+                      <img alt={logo.imgAlt} src={logo.imgSrc} />
                     </a>
                   )}
                 </Col>
@@ -298,22 +232,36 @@ const Sidebar = (props) => {
           {/* Divider */}
           <hr className="my-3" />
           {/* Heading */}
-         
+          <h6 className="navbar-heading text-muted">Documentation</h6>
           {/* Navigation */}
           <Nav className="mb-md-3" navbar>
-           
-            
-            
+            <NavItem>
+              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar">
+                <i className="ni ni-spaceship" />
+                Getting started
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/colors?ref=adr-admin-sidebar">
+                <i className="ni ni-palette" />
+                Foundation
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/alerts?ref=adr-admin-sidebar">
+                <i className="ni ni-ui-04" />
+                Components
+              </NavLink>
+            </NavItem>
           </Nav>
           <Nav className="mb-md-3" navbar>
-            
+            <NavItem className="active-pro active">
+              <NavLink href="https://www.creative-tim.com/product/argon-dashboard-pro-react?ref=adr-admin-sidebar">
+                <i className="ni ni-spaceship" />
+                Upgrade to PRO
+              </NavLink>
+            </NavItem>
           </Nav>
-
-          {
-            notif===true &&(
-              <DashboardAlert  titre={'Travaux Terminé(s)'} message={`vous avez ${unplannedDemands} travaux terminé(s) en attente de vos retours depuis 7 jours `} link={'/CHEF_SERVICE/Suivi'}/>
-            )
-          }
         </Collapse>
       </Container>
     </Navbar>

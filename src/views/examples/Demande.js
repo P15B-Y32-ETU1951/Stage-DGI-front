@@ -12,10 +12,12 @@ import {
     Row,
 } from 'reactstrap';
 import UserHeader from 'components/Headers/UserHeader';
+import { useNavigate } from 'react-router-dom';
 
 const Demande = () => {
     const [motif, setMotif] = useState('');
     const [description, setDescription] = useState('');
+    const navigate=useNavigate();
 
     // Fonction pour gérer l'envoi du formulaire
     const handleSubmit = async (e) => {
@@ -61,6 +63,7 @@ const Demande = () => {
                 // Reset des champs du formulaire
                 setMotif('');
                 setDescription('');
+                navigate(`${role}/index`);
             } else {
                 console.error('Erreur lors de l\'envoi de la demande:',response.statusText );
                 console.log(demandeData);

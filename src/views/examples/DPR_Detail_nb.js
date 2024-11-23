@@ -26,16 +26,12 @@ const DPR_Detail_nb = () => {
    
 
     // Récupérer les valeurs du localStorage
-    const service = localStorage.getItem('authService');
-    const utilisateurId = localStorage.getItem('authId');
+
     const authToken = localStorage.getItem('authToken');
     const role = localStorage.getItem('authRole');
 
 
-    if (!service || !utilisateurId) {
-        console.error("Service ou utilisateur non trouvé dans le localStorage");
-        return;
-    }
+    
 
     // Reformatage de la date au format YYYY-MM-DD
    
@@ -96,7 +92,7 @@ const DPR_Detail_nb = () => {
       <Container className="mt--7" fluid>
         <Row className="justify-content-center">
           <Col className="order-xl-1" xl="8">
-            <Card className="bg-secondary shadow">
+            <Card className="shadow bg-secondary">
               <CardHeader className="bg-white border-0" >
                 <Row className="align-items-center">
                   <Col xs="8">
@@ -118,7 +114,7 @@ const DPR_Detail_nb = () => {
               </CardHeader>
               <CardBody>
                 <Form>
-                  <h6 className="heading-small text-muted mb-4">
+                  <h6 className="mb-4 heading-small text-muted">
                     {demande.motif}
                   </h6>
                   <hr className="my-4" />

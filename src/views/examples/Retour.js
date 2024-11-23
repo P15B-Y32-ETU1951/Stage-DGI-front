@@ -89,16 +89,12 @@ const Retour = () => {
    
 
     // Récupérer les valeurs du localStorage
-    const service = localStorage.getItem('authService');
-    const utilisateurId = localStorage.getItem('authId');
+    
     const authToken = localStorage.getItem('authToken');
     const role = localStorage.getItem('authRole');
 
 
-    if (!service || !utilisateurId) {
-        console.error("Service ou utilisateur non trouvé dans le localStorage");
-        return;
-    }
+    
 
     // Reformatage de la date au format YYYY-MM-DD
    

@@ -2,6 +2,7 @@ import Header from 'components/Headers/Header';
 import { useNavigate } from 'react-router-dom'; // Importer useNavigate si vous utilisez React Router v6
 import { useEffect, useState } from 'react';
 import { Badge, Button, Card, CardHeader, Container, DropdownItem, DropdownMenu, DropdownToggle, Media, Row, Table, UncontrolledDropdown } from 'reactstrap';
+import DemandeHeader from 'components/Headers/DemandeHeader';
 
 const DPR_Demande_Valide = () => {
   const [demandes, setDemandes] = useState([]);
@@ -41,13 +42,13 @@ const DPR_Demande_Valide = () => {
 
   return (
     <>
-      <Header />
+      <DemandeHeader />
       <Container className="mt--7" fluid>
         <Row className="mt-5">
           <div className="col">
-            <Card className="bg-default shadow">
+            <Card className="shadow bg-default">
               <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
-              <h3 className="text-white mb-0"> Nouvelles demandes reçues</h3>
+              <h3 className="mb-0 text-white"> Demandes validées</h3>
                 <div>
                   <Button color="info" size="sm" onClick={sortByDateAsc}>
                   <i className="ni ni-bold-up" />

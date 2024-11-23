@@ -2,11 +2,13 @@ import Header from 'components/Headers/Header';
 import { useNavigate } from 'react-router-dom'; // Importer useNavigate si vous utilisez React Router v6
 import { useEffect, useState } from 'react';
 import { Badge, Button, Card, CardHeader, Container, DropdownItem, DropdownMenu, DropdownToggle, Media, Row, Table, UncontrolledDropdown } from 'reactstrap';
+import TravauxHeader from 'components/Headers/TravauxHeader';
+import DashboardAlert from './DashboardAlert';
 
 const Travaux_Termine = () => {
   const [demandes, setDemandes] = useState([]);
   const navigate = useNavigate(); // Utilisation du hook useNavigate
-
+  const [reclam,setReclam] = useState(false);
   useEffect(() => {
     const fetchDemandes = async () => {
       try {
@@ -34,16 +36,9 @@ const Travaux_Termine = () => {
    
 
     // Récupérer les valeurs du localStorage
-    const service = localStorage.getItem('authService');
-    const utilisateurId = localStorage.getItem('authId');
+    
     const authToken = localStorage.getItem('authToken');
     const role = localStorage.getItem('authRole');
-
-
-    if (!service || !utilisateurId) {
-        console.error("Service ou utilisateur non trouvé dans le localStorage");
-        return;
-    }
 
     // Reformatage de la date au format YYYY-MM-DD
    
@@ -78,6 +73,10 @@ const Travaux_Termine = () => {
         console.error('Erreur réseau:', error);
     }
 };
+
+
+
+
 const sortByDateAsc = () => {
   const sortedDemandes = [...demandes].sort((a, b) => new Date(a.date) - new Date(b.date));
   setDemandes(sortedDemandes);
@@ -91,14 +90,14 @@ const sortByDateDesc = () => {
 
   return (
     <>
-      <Header />
+      <TravauxHeader />
       <Container className="mt--7" fluid>
         <Row className="mt-5">
           <div className="col">
-            <Card className="bg-default shadow">
+            <Card className="shadow bg-default">
              
               <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
-                <h3 className="text-white mb-0">Travaux réceptionnés</h3>
+                <h3 className="mb-0 text-white">Travaux réceptionnés</h3>
                 <div>
                   <Button color="info" size="sm" onClick={sortByDateAsc}>
                   <i className="ni ni-bold-up" />
@@ -176,6 +175,7 @@ const sortByDateDesc = () => {
                   )}
                 </tbody>
               </Table>
+             
             </Card>
           </div>
         </Row>
