@@ -132,7 +132,6 @@ const calculateProgress = (dateDebut, dateFin) => {
                     <th scope="col">Motif</th>
                     <th scope="col">Date de début</th>
                     <th scope="col">Date de fin</th>
-                    <th scope="col">Coût des travaux</th>
                     <th scope="col">Avancement des Travaux</th>
                     <th scope="col"/>
                     <th scope="col" />
@@ -158,7 +157,6 @@ const calculateProgress = (dateDebut, dateFin) => {
                             <td>{demande.motif}</td>
                             <td>{demande.planification.dateDebut}</td>
                             <td>{demande.planification.dateFin}</td>
-                            <td>{demande.travaux.total} Ar</td>
                             <td>
                                 <div className="d-flex align-items-center">
                                 <span className="mr-2">{Math.round(progress)}%</span>

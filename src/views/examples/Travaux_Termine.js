@@ -114,7 +114,6 @@ const sortByDateDesc = () => {
                     <th scope="col">Motif</th>
                     <th scope="col">Date de début</th>
                     <th scope="col">Date de fin</th>
-                    <th scope="col">Coût des travaux</th>
                     <th scope="col">Statut</th>
                     <th scope="col" />
                   </tr>
@@ -139,9 +138,7 @@ const sortByDateDesc = () => {
                         <td>
                           {demande.planification.dateFin}
                         </td>
-                        <td>
-                          {demande.travaux.total} Ar
-                        </td>
+                       
                         <td>
                             {demande.statut.description} 
                         </td>

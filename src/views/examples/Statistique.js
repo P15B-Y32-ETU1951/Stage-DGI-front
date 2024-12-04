@@ -150,7 +150,7 @@ const Statistique = () => {
     
       setBarData(barData);
       const totalGlobal = barData.reduce((acc, curr) => acc + curr.value, 0);
-      setTotal(totalGlobal);
+      setTotal(totalGlobal.toLocaleString('en-US'));
       
       // Mettre à jour l'état avec les nouvelles données
     };

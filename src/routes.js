@@ -54,6 +54,9 @@ import Statistique from "views/examples/Statistique";
 import DocViewer from "views/examples/DocViewer";
 import PdfViewer from "views/examples/PdfViewer";
 import ChangePassword from "views/examples/Change-Password";
+import Planification2 from "views/examples/Planification2";
+import Planification3 from "views/examples/Planification3";
+import Reouverture2 from "views/examples/Reouverture2";
 
 var routes = [
   {
@@ -163,7 +166,7 @@ var routes = [
     path: "/Planification/:id",
     name: "Planification",
     icon: "ni ni-send text-blue",
-    component: <Planification />,
+    component: <Planification3 />,
     layout: "/DPR_SAF",
 
   },
@@ -243,7 +246,7 @@ var routes = [
     path: "/Travaux/reouverture/:id", // Utilisez :id pour indiquer un paramètre dynamique
     name: "Travaux réouverture",
     icon: "ni ni-settings text-info",
-    component: <Reouverture/>, // Assurez-vous de ne pas utiliser de balises JSX ici
+    component: <Reouverture2/>, // Assurez-vous de ne pas utiliser de balises JSX ici
     layout: "/DPR_SAF",
   },
   {

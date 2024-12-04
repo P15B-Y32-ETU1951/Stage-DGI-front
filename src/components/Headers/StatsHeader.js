@@ -22,33 +22,33 @@ import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 const StatsHeader = ({valide,rejet,ressource,total}) => {
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
+      <div className="pt-5 pb-8 header bg-gradient-info pt-md-8">
         <Container fluid>
           <div className="header-body">
           <Row>
               <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
+                <Card className="mb-4 card-stats mb-xl-0">
                   <CardBody>
                     <Row>
                       <div className="col">
                         <CardTitle
                           tag="h5"
-                          className="text-uppercase text-muted mb-0"
+                          className="mb-0 text-uppercase text-muted"
                         >
                           Demandes validées
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
+                        <span className="mb-0 h2 font-weight-bold">
                         {valide.nombre}
                         </span>
                       </div>
                       <Col className="col-auto">
-                        <div className="icon icon-shape bg-success text-white rounded-circle shadow">
+                        <div className="text-white shadow icon icon-shape bg-success rounded-circle">
                           <i className="ni ni-check-bold" />
                         </div>
                       </Col>
                     </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
+                    <p className="mt-3 mb-0 text-sm text-muted">
+                      <span className="mr-2 text-success">
                        
                         {valide.pourcentage} %
                       </span>{" "}
@@ -58,28 +58,28 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                 </Card>
               </Col>
               <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
+                <Card className="mb-4 card-stats mb-xl-0">
                   <CardBody>
                     <Row>
                       <div className="col">
                         <CardTitle
                           tag="h5"
-                          className="text-uppercase text-muted mb-0"
+                          className="mb-0 text-uppercase text-muted"
                         >
                           Demandes rejettées
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
+                        <span className="mb-0 h2 font-weight-bold">
                         {rejet.nombre}
                         </span>
                       </div>
                       <Col className="col-auto">
-                        <div className="icon icon-shape bg-red text-white rounded-circle shadow">
+                        <div className="text-white shadow icon icon-shape bg-red rounded-circle">
                           <i className="ni ni-fat-remove" />
                         </div>
                       </Col>
                     </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
+                    <p className="mt-3 mb-0 text-sm text-muted">
+                      <span className="mr-2 text-success">
                        
                         {rejet.pourcentage} %
                       </span>{" "}
@@ -89,27 +89,27 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                 </Card>
               </Col>
               <Col lg="6" xl="3">
-              <Card className="card-stats mb-4 mb-xl-0">
+              <Card className="mb-4 card-stats mb-xl-0">
                 <CardBody>
                   <Row>
                     <div className="col">
                       <CardTitle
                         tag="h5"
-                        className="text-uppercase text-muted mb-0"
+                        className="mb-0 text-uppercase text-muted"
                       >
                         Valeur dépensée en ressource
                       </CardTitle>
-                      <span className="h2 font-weight-bold mb-0">
+                      <span className="mb-0 h2 font-weight-bold">
                       {total} Ar
                       </span>
                     </div>
                     <Col className="col-auto">
-                      <div className="icon icon-shape bg-info text-white rounded-circle shadow">
+                      <div className="text-white shadow icon icon-shape bg-info rounded-circle">
                         <i className="ni ni-money-coins" />
                       </div>
                     </Col>
                   </Row>
-                  <p className="mt-3 mb-0 text-muted text-sm">
+                  <p className="mt-3 mb-0 text-sm text-muted">
                    
                    
                   </p>

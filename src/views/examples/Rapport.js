@@ -105,9 +105,9 @@ const Rapport = () => {
       <Container className="mt--7" fluid>
         <Row className="mt-5">
           <div className="col">
-            <Card className="bg-default shadow">
+            <Card className="shadow bg-default">
               <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
-                <h3 className="text-white mb-0">Rapports des Travaux</h3>
+                <h3 className="mb-0 text-white">Rapports des Travaux</h3>
                 <div>
                   <Button color="info" size="sm" onClick={sortByDateAsc}>
                     <i className="ni ni-bold-up" />
@@ -124,7 +124,6 @@ const Rapport = () => {
                     <th scope="col">Motif</th>
                     <th scope="col">Date de début</th>
                     <th scope="col">Date de fin</th>
-                    <th scope="col">Coût des travaux</th>
                     <th scope="col">Rapport</th>
                     <th scope="col" />
                   </tr>
@@ -145,7 +144,6 @@ const Rapport = () => {
                         <td>{demande.motif}</td>
                         <td>{demande.planification.dateDebut}</td>
                         <td>{demande.planification.dateFin}</td>
-                        <td>{demande.travaux.total} Ar</td>
                         <td>
                         {!demande.rapport ? (
                           <button

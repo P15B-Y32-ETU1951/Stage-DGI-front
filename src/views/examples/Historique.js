@@ -93,7 +93,7 @@ const Historique = () => {
         <Row className="mt-5">
           <Col md="6">
             {/* Carte pour les dates de planification */}
-            <Card className="bg-secondary shadow-sm mb-4">
+            <Card className="mb-4 shadow-sm bg-secondary">
               <CardHeader className="bg-default">
                 <h5 className="mb-0 text-white">Filtrer entre deux dates</h5>
               </CardHeader>
@@ -141,7 +141,7 @@ const Historique = () => {
           </Col>
           <Col md="6">
             {/* Carte pour le filtre de service */}
-            <Card className="bg-secondary shadow-sm mb-4">
+            <Card className="mb-4 shadow-sm bg-secondary">
               <CardHeader className="bg-default">
                 <h5 className="mb-0 text-white">Filtrer par service</h5>
               </CardHeader>
@@ -166,9 +166,9 @@ const Historique = () => {
         </Row>
         <Row className="mt-5">
           <Col>
-            <Card className="bg-default shadow">
+            <Card className="shadow bg-default">
               <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
-                <h3 className="text-white mb-0">Rapports des Travaux</h3>
+                <h3 className="mb-0 text-white">Rapports des Travaux</h3>
                 <div>
                   <Button color="info" size="sm" onClick={sortByDateAsc}>
                     <i className="ni ni-bold-up" />
@@ -185,7 +185,6 @@ const Historique = () => {
                     <th scope="col">Motif</th>
                     <th scope="col">Date de début</th>
                     <th scope="col">Date de fin</th>
-                    <th scope="col">Coût des travaux</th>
                     <th scope="col" />
                   </tr>
                 </thead>
@@ -203,7 +202,6 @@ const Historique = () => {
                         <td>{demande.motif}</td>
                         <td>{demande.planification.dateDebut}</td>
                         <td>{demande.planification.dateFin}</td>
-                        <td>{demande.travaux.total} Ar</td>
                         <td className="text-right">
                           <UncontrolledDropdown>
                             <DropdownToggle className="btn-icon-only text-light" href="#pablo" role="button" size="sm" color="" onClick={(e) => e.preventDefault()}>

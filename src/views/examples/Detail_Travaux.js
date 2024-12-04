@@ -8,84 +8,58 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import { Navigate, useNavigate, useParams } from "react-router-dom"; // Utilisé pour récupérer l'ID de la demande depuis l'URL
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "components/Headers/Header";
 
 const DetailTravaux = () => {
-  const { id } = useParams(); // L'ID du travail à afficher
+  const { id } = useParams(); // ID de la demande
   const [demande, setDemande] = useState(null); // Détails de la demande
-  const [ressources, setRessources] = useState([]); // Ressources liées au travail
   const [loading, setLoading] = useState(true); // État de chargement
   const [error, setError] = useState(null); // État d'erreur
-  const authRole = localStorage.getItem('authRole'); // Récupération du rôle de l'utilisateur
+  const authRole = localStorage.getItem("authRole"); // Rôle de l'utilisateur
   const navigate = useNavigate();
+
   // Récupération des détails de la demande
   useEffect(() => {
     const fetchDemandeDetails = async () => {
       try {
-        const token = localStorage.getItem('authToken');
-        const demandeResponse = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/detail/${id}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const token = localStorage.getItem("authToken");
+        const response = await fetch(
+          `http://localhost:8080/api/v1/${authRole}/demande/detail/${id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-        if (demandeResponse.ok) {
-          const demandeData = await demandeResponse.json();
-          setDemande(demandeData);
+        if (response.ok) {
+          const data = await response.json();
+          setDemande(data);
         } else {
-          setError('Erreur lors de la récupération des détails de la demande');
+          setError("Erreur lors de la récupération des détails de la demande.");
         }
-      } catch (error) {
-        setError('Erreur réseau ou problème de serveur');
+      } catch (err) {
+        setError("Erreur réseau ou problème de serveur.");
       }
-      setLoading(false); // Fin du chargement
+      setLoading(false);
     };
 
     fetchDemandeDetails();
   }, [id, authRole]);
 
-  // Récupération des ressources après avoir récupéré les détails de la demande
-  useEffect(() => {
-    const fetchRessources = async () => {
-      if (demande && demande.travaux && demande.travaux.id) {
-        try {
-          const token = localStorage.getItem('authToken');
-          const ressourceResponse = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource/travaux/${demande.travaux.id}`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (ressourceResponse.ok) {
-            const ressourceData = await ressourceResponse.json();
-            setRessources(ressourceData);
-            console.log(
-              "demande:" ,ressourceData
-            ) // Mettre à jour la liste des ressources
-          } else {
-            setError('Erreur lors de la récupération des ressources associées');
-          }
-        } catch (error) {
-          setError('Erreur réseau ou problème de serveur');
-        }
-      }
-    };
-
-    fetchRessources();
-  }, [demande, authRole]); // Le hook s'exécute à nouveau lorsque `demande` change
-
   if (loading) {
-    return <p>Chargement des détails du travail...</p>;
+    return <p>Chargement des détails...</p>;
   }
 
   if (error) {
     return <p>{error}</p>;
   }
+
+  // Calcul du prix total de tous les travaux
+  const totalPrixTravaux = demande.travaux.reduce((total, travail) => total + travail.total, 0);
 
   return (
     <>
@@ -95,87 +69,113 @@ const DetailTravaux = () => {
           <Col xl="8">
             <Card className="shadow">
               <CardHeader className="bg-transparent">
-                <h3 className="mb-0">Détail des Travaux</h3>
+                <h3 className="mb-0">Détail de la Demande</h3>
               </CardHeader>
               <CardBody>
-                <Row className="justify-content-center">
-                  <Col lg="5" className="text-center">
-                    <h5>Service</h5>
+                {/* Informations générales */}
+                <Row>
+                  <Col lg="6">
+                    <h5>Service demandeur</h5>
                     <p>{demande.service.nom}</p>
+                    <h5>Agent </h5>
+                    <p>{`${demande.utilisateur.nom} ${demande.utilisateur.prenom}`}</p>
+                  </Col>
+                  <Col lg="6">
+                    <h5>Date d'envoie </h5>
+                    <p>{new Date(demande.date).toLocaleDateString()}</p>
                     <h5>Motif</h5>
                     <p>{demande.motif}</p>
-                    <h5>Date de début</h5>
-                    <p>{new Date(demande.planification.dateDebut).toLocaleDateString()}</p>
-                    <h5>Date de fin</h5>
-                    <p>{new Date(demande.planification.dateFin).toLocaleDateString()}</p>
-                    <h5>Prix total des Travaux</h5>
-                    <p>{demande.travaux.total} Ar</p>
                   </Col>
                 </Row>
 
-               
                 <hr className="my-4" />
-                <Row className="justify-content-center">
-                  <Col lg="8">
-                    <h4>Liste des Ressources</h4>
-                    {ressources.length > 0 ? (
-                      <ul>
-                        {ressources.map((ressource) => (
-                          <li key={ressource.id}>
-                            <h4>{ressource.ressource.nom} :</h4>
-                             <p>Quantité : {ressource.quantite}</p> 
-                             <p>Prix unitaire : {ressource.ressource.valeurUnitaire} Ar</p> 
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>Aucune ressource disponible pour ce travail.</p>
-                    )}
-                  </Col>
-                </Row>
-                <hr className="my-4" />
-                {demande.statut.id===10 &&(
-                
-                  <Row className="justify-content-center">
-                    <Col lg="8">
-                      <div class="alert alert-warning" role="alert">
-                          <span class="alert-icon"><i class="ni ni-bold-down"></i></span>
-                          <span class="alert-text"><strong>!Reclamation sur les travaux</strong> </span>
-                      </div>
-                      <h4><i class="ni ni-bold-right">{demande.reclamations[demande.reclamations.length-1].motif}</i></h4>
-                      <div className="text-center mt-4">
-                  <Button color="warning" onClick={() => navigate(`/${authRole}/Travaux/reouverture/${demande.id}`)}>
-                    Réouvrir les travaux
-                  </Button>
-                </div>
-                    </Col>
 
-                  </Row>
-                )
-                }
+                {/* Liste des travaux */}
+                <h4>Liste des Travaux</h4>
+                {demande.travaux.length > 0 ? (
+                  <ul>
+                    {demande.travaux.map((travail) => (
+                      <li key={travail.id}>
+                        <h4>{travail.nom}</h4>
+                        <p>
+                          Période des travaux :{" "}
+                          {new Date(travail.dateDebut).toLocaleDateString()} -{" "}
+                          {new Date(travail.dateFin).toLocaleDateString()}
+                        </p>
+                        <p>Total : {travail.total.toLocaleString('en-US')} Ar</p>
 
-                {
-                  demande.statut.id===9 &&(
-                    <Row className="justify-content-center">
-                      <Col lg="8">
-                        <h4 className="mb-0">Historique du suivi de la demande</h4>
-                        <ul>
-                          {demande.statutDemandes
-                            .slice() // Crée une copie pour ne pas modifier l'original
-                            .sort((a, b) => new Date(a.date_changement) - new Date(b.date_changement)) // Trie par date en ordre croissant
-                            .map((statutdemande) => (
-                              <li key={statutdemande.id}>
-                                <p>{new Date(statutdemande.date_changement).toLocaleDateString()} : {statutdemande.statut.description}</p>
+                        {/* Liste des ressources */}
+                        <h5>Ressources utilisées :</h5>
+                        {travail.ressourceTravaux.length > 0 ? (
+                          <ul>
+                            {travail.ressourceTravaux.map((rt) => (
+                              <li key={rt.id}>
+                                <p>
+                                  {rt.ressource.nom} 
+                                </p>
+                                <h5>Quantité : {rt.quantite}</h5>
+                                <h5>Prix unitaire : {rt.ressource.valeurUnitaire.toLocaleString('en-US')} Ar</h5>
                               </li>
                             ))}
-                        </ul>
-                      </Col>
-                    </Row>
-                    
-                  )
-                }
+                          </ul>
+                        ) : (
+                          <p>Aucune ressource utilisée pour ce travail.</p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>Aucun travail associé à cette demande.</p>
+                )}
+                <h2 className="mt-4 text-center">Prix total des Travaux : {totalPrixTravaux.toLocaleString('en-US')} Ar</h2>
+
+
+                <hr className="my-4" />
+
+                {/* Total global */}
+                {demande.statut.id===10 &&(
                 
-                <div className="text-center mt-4">
+                <Row className="justify-content-center">
+                  <Col lg="8">
+                    <div class="alert alert-warning" role="alert">
+                        <span class="alert-icon"><i class="ni ni-bold-down"></i></span>
+                        <span class="alert-text"><strong>!Reclamation sur les travaux</strong> </span>
+                    </div>
+                    <h4><i class="ni ni-bold-right">{demande.reclamations[demande.reclamations.length-1].motif}</i></h4>
+                    <div className="mt-4 text-center">
+                <Button color="warning" onClick={() => navigate(`/${authRole}/Travaux/reouverture/${demande.id}`)}>
+                  Réouvrir les travaux
+                </Button>
+              </div>
+                  </Col>
+
+                </Row>
+              )
+              }
+
+              {
+                demande.statut.id===9 &&(
+                  <Row className="justify-content-center">
+                    <Col lg="8">
+                      <h4 className="mb-0">Historique du suivi de la demande</h4>
+                      <ul>
+                        {demande.statutDemandes
+                          .slice() // Crée une copie pour ne pas modifier l'original
+                          .sort((a, b) => new Date(a.date_changement) - new Date(b.date_changement)) // Trie par date en ordre croissant
+                          .map((statutdemande) => (
+                            <li key={statutdemande.id}>
+                              <p>{new Date(statutdemande.date_changement).toLocaleDateString()} : {statutdemande.statut.description}</p>
+                            </li>
+                          ))}
+                      </ul>
+                    </Col>
+                  </Row>
+                  
+                )
+              }
+               
+
+                <div className="mt-4 text-center">
                   <Button color="primary" onClick={() => window.history.back()}>
                     Retour
                   </Button>

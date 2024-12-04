@@ -23,7 +23,7 @@ const UserHeader = () => {
   return (
     <>
       <div
-        className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+        className="pt-5 pb-8 header pt-lg-8 d-flex align-items-center"
         style={{
           minHeight: "250px",
           backgroundImage:

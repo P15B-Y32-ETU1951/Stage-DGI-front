@@ -34,9 +34,9 @@ const Ressource = () => {
       <Container className="mt--7" fluid>
         <Row className="mt-5">
           <div className="col">
-            <Card className="bg-default shadow">
+            <Card className="shadow bg-default">
               <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0"> Ressources </h3>
+                <h3 className="mb-0 text-white"> Ressources </h3>
               </CardHeader>
               <Table className="align-items-center table-dark table-flush" responsive>
                 <thead className="thead-dark">
@@ -46,7 +46,7 @@ const Ressource = () => {
                     <th scope="col">prix unitaire</th>
                     <th scope="col">  
                         <Button className="btn-icon btn-2" 
-                        color="success" 
+                        color="info" 
                         type="button"
                         onClick={() => navigate('/DPR_SAF/ressource/ajouter')}
                         
@@ -74,28 +74,22 @@ const Ressource = () => {
                         </th>
                         <td>{ressource.quantite}</td>
                        
-                        <td>{ressource.valeurUnitaire}</td>
+                        <td>{ressource.valeurUnitaire.toLocaleString('en-US')}</td>
+                        <td>
+                        <button
+                          className="btn btn-sm btn-success"
+                          color='success'
+                       
+                        onClick={() => navigate('/DPR_SAF/ressource/ajouter')}
                         
-                        <td className="text-right">
-                          <UncontrolledDropdown>
-                            <DropdownToggle
-                              className="btn-icon-only text-light"
-                              href="#pablo"
-                              role="button"
-                              size="sm"
-                              color=""
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              <i className="fas fa-ellipsis-v" />
-                            </DropdownToggle>
-                            <DropdownMenu className="dropdown-menu-arrow" right>
-                              <DropdownItem
-                               onClick={() => navigate(`/DPR_SAF/ressource/approvisionner/${ressource.id}`)}>
+                        >
+                            
+                                <i className="ni ni-fat-add" />
                                 Approvisionner
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledDropdown>
+                        </button>                       
                         </td>
+                        
+                       
                       </tr>
                     ))
                   ) : (
