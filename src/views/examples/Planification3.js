@@ -18,6 +18,7 @@ const Planification3 = () => {
   const [nomEtape, setNomEtape] = useState('');
   const [dateDebutEtape, setDateDebutEtape] = useState('');
   const [dateFinEtape, setDateFinEtape] = useState('');
+  const [jsonData, setJsonData] = useState(null);
 
   // Fetch des ressources depuis l'API
   useEffect(() => {
@@ -205,6 +206,7 @@ const Planification3 = () => {
     console.log("prix", calculateTotalPrice());
     console.log("debut", formatDate(dateDebut));
     console.log("fin", formatDate(dateFin));
+    console.log(jsonData);
   };
   const handleSubmit = async () => {
     if (!dateDebut || !dateFin) {
@@ -235,7 +237,7 @@ const Planification3 = () => {
         },
         body: JSON.stringify(jsonData)
       });
-
+      
       if (response.ok) {
         const data = await response.json();
         alert('Planification envoyée avec succès !');

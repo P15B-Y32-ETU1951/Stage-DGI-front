@@ -63,18 +63,20 @@ const Retour = () => {
 
           if (ressourceResponse.ok) {
             const ressourceData = await ressourceResponse.json();
-            setRessources(ressourceData); // Mettre à jour la liste des ressources
+            setRessources(ressourceData); 
+          
+            // Mettre à jour la liste des ressources
           } else {
-            setError('Erreur lors de la récupération des ressources associées');
+            console.log('Erreur lors de la récupération des ressources associées');
           }
         } catch (error) {
           setError('Erreur réseau ou problème de serveur');
         }
       }
     };
-
+    console.log('ressources:', ressources);
     fetchRessources();
-  }, [demande, authRole]); // Le hook s'exécute à nouveau lorsque `demande` change
+  }, [demande, authRole,ressources]); // Le hook s'exécute à nouveau lorsque `demande` change
 
   if (loading) {
     return <p>Chargement des détails du travail...</p>;
@@ -163,31 +165,12 @@ const Retour = () => {
                     <p>{new Date(demande.planification.dateDebut).toLocaleDateString()}</p>
                     <h5>Date de fin</h5>
                     <p>{new Date(demande.planification.dateFin).toLocaleDateString()}</p>
-                    <h5>Prix total des Travaux</h5>
-                    <p>{demande.travaux.total} Ar</p>
                   </Col>
                 </Row>
 
                 <hr className="my-4" />
 
-                <Row className="justify-content-center">
-                  <Col lg="8">
-                    <h4>Liste des Ressources</h4>
-                    {ressources.length > 0 ? (
-                      <ul>
-                        {ressources.map((ressource) => (
-                          <li key={ressource.id}>
-                            <h4>{ressource.ressource.nom} :</h4>
-                             <p>Quantité : {ressource.quantite}</p> 
-                             <p>Prix unitaire : {ressource.ressource.valeurUnitaire} Ar</p> 
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>Aucune ressource disponible pour ce travail.</p>
-                    )}
-                  </Col>
-                </Row>
+                
 
                 <div className="text-center mt-4">
                   <Button color="primary" onClick={() => window.history.back()}>

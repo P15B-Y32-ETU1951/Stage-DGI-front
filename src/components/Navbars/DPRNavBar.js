@@ -71,19 +71,19 @@ const DPRNavbar = (props) => {
             className="h4 mb-0 text-white "
             to="/DPR_SAF/Travaux/rapport"
           >
-            Rapport des travaux 
+            <i className="ni ni-folder-17" ></i> -Rapport des travaux 
           </Link>
           <Link
             className="h4 mb-0 text-white "
             to="/DPR_SAF/Historique"
           >
-            Historique des Travaux
+           <i className="ni ni-time-alarm" ></i>- Historique des Travaux
           </Link>
           <Link
             className="h4 mb-0 text-white "
             to="/DPR_SAF/index"
           >
-            Statistiques
+            <i className="ni ni-chart-bar-32" ></i>-Statistiques
           </Link>
          
           <Nav className="align-items-center d-none d-md-flex" navbar>

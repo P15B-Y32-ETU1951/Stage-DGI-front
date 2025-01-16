@@ -57,6 +57,7 @@ import ChangePassword from "views/examples/Change-Password";
 import Planification2 from "views/examples/Planification2";
 import Planification3 from "views/examples/Planification3";
 import Reouverture2 from "views/examples/Reouverture2";
+import Forgot_Password from "views/examples/Forgot_Password";
 
 var routes = [
   {
@@ -107,6 +108,13 @@ var routes = [
     name: "Change Password",
     icon: "ni ni-circle-08 text-pink",
     component: <ChangePassword />,
+    layout: "/auth",
+  },
+  {
+    path: "/forgot-password",
+    name: "Forgot Password",
+    icon: "ni ni-circle-08 text-pink",
+    component: <Forgot_Password />,
     layout: "/auth",
   },
 

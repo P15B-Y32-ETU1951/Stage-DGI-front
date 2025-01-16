@@ -19,6 +19,7 @@ const Statistique = () => {
   const [statut, setStatut] = useState([]);
   const [pieData, setPieData] = useState([]);
   const [barData, setBarData] = useState([]);
+  const[pieChart, setPieChart] = useState([]);
   const [valide, setValide] = useState([]);
   const [rejet, setRejet] = useState([]);
   const [ressource, setRessource] = useState([]);
@@ -274,6 +275,25 @@ const Statistique = () => {
     height: 500,
     margin: { left: 150 }, // Utilisation correcte des accolades pour définir un objet
   };
+
+  useEffect(() => {
+    const calculnombreDemandesParService = () => {
+      const demandesParService = services.map((service) => {
+        const count = demandes.filter((demande) => demande.service.id === service.id).length;
+        return {
+          name: service.nom, // Le nom du service
+          value: count, // Nombre de demandes pour ce service
+        };
+      });
+  
+      setPieChart(demandesParService); // Pour un BarChart
+    };
+  
+    if (services.length && demandes.length) {
+      calculnombreDemandesParService();
+    }
+  }, [demandes, services]);
+  
   
   return (
     <>
@@ -286,7 +306,7 @@ const Statistique = () => {
           
             <Card className="bg-white">
               <CardHeader className="border-0 bg-default d-flex justify-content-between align-items-center">
-                <h3 className="mb-0 text-white">Statistique des demandes par statut</h3>
+                <h3 className="mb-0 text-white">Statistiques des demandes par statut</h3>
               </CardHeader>
               <CardBody>
                 <PieChart
@@ -328,7 +348,7 @@ const Statistique = () => {
             </Card>
             <Card className="mt-5 bg-white">
             <CardHeader className="border-0 bg-default d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">Statistiques des Travaux par Mois</h3>
+              <h3 className="mb-0 text-white">Statistiques des Travaux réalisés par Mois</h3>
             </CardHeader>
             <CardBody>
               <BarChart
@@ -350,6 +370,38 @@ const Statistique = () => {
               />
             </CardBody>
           </Card>
+          <Card className="mt-5 bg-white">
+  <CardHeader className="border-0 bg-default d-flex justify-content-between align-items-center">
+    <h3 className="mb-0 text-white">Nombre de Demandes par Service</h3>
+  </CardHeader>
+  <CardBody style={{ overflowX: 'auto' }}>
+  <BarChart
+  dataset={pieChart} // Données calculées dans useEffect
+  yAxis={[
+    {
+      scaleType: 'band',
+      dataKey: 'name',
+      label: '', // Pas d'étiquette pour l'axe des Y
+    },
+  ]}
+  series={[
+    { dataKey: 'value', label: 'Nombre de Demandes', color: '#1976D2' },
+  ]}
+  layout="horizontal" // Barres horizontales
+  width={1200} // Largeur ajustable
+  height={800} // Hauteur ajustable
+  margin={{ left: 300 }} // Augmentez la marge gauche pour plus d'espace
+  sx={{
+    [`& .${axisClasses.left} .${axisClasses.label}`]: {
+      // Supprimez ou ajustez la transformation de l'étiquette
+      transform: 'none',
+    },
+  }}
+/>
+
+  </CardBody>
+</Card>
+
           </Col>
         </Row>
       </Container>
