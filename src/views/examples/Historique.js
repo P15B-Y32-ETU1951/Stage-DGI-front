@@ -50,20 +50,23 @@ const Historique = () => {
 
   const filterDemandes = () => {
     let filtered = demandes;
-
+  
     if (startDate && endDate) {
       filtered = filtered.filter((demande) => {
+        const dateDebut = new Date(demande.planification.dateDebut);
         const dateFin = new Date(demande.planification.dateFin);
-        return dateFin >= startDate && dateFin <= endDate;
+        
+        return dateDebut >=startDate  && dateFin <= endDate; // Vérifie si la période chevauche
       });
     }
-
+  
     if (selectedService) {
       filtered = filtered.filter((demande) => demande.service.nom === selectedService);
     }
-
+  
     setFilteredDemandes(filtered);
   };
+  
 
   const resetFilters = () => {
     setStartDate(null);

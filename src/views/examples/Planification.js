@@ -154,7 +154,7 @@ const Planification = () => {
           <Col md="6">
             {/* Carte pour les dates de planification */}
             <Card className="mb-4 shadow-sm bg-secondary">
-              <CardHeader className="bg-info">
+              <CardHeader className="bg-default text white">
                 <h5 className="mb-0">Dates de Planification :</h5>
               </CardHeader>
               <CardBody>

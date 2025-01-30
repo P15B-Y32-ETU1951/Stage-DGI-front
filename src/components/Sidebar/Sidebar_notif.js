@@ -195,7 +195,7 @@ const Sidebar_notif = (props) => {
   const createLinks = (routes) => {
     return routes.map((prop, key) => (
       <NavItem key={key}>
-        <NavLink
+        <NavLink className="text-white"
           to={prop.layout + prop.path}
           tag={NavLinkRRD}
           onClick={() => {
@@ -225,18 +225,26 @@ const Sidebar_notif = (props) => {
   }
 
   return (
-    <Navbar className="bg-white navbar-vertical fixed-left navbar-light" expand="md" id="sidenav-main">
+    <Navbar className="bg-default navbar-vertical fixed-left navbar-light" expand="md" id="sidenav-main">
       <Container fluid>
-        <button className="navbar-toggler" type="button" onClick={toggleCollapse}>
+               {/* Toggler */}
+               <button
+          className="navbar-toggler"
+          type="button"
+          onClick={toggleCollapse}
+        >
           <span className="navbar-toggler-icon" />
         </button>
+        {/* Brand */}
         {logo ? (
-          <NavbarBrand className="pt-0" {...navbarBrandProps}>
-            <img alt="Votre Logo" className="navbar-brand-img" src={newLogo} />
-            <span className="navbar-brand-text">
-              <p>Direction Générale des Impôts</p>
-            </span>
-          </NavbarBrand>
+         <NavbarBrand className="pt-0 text-white" {...navbarBrandProps}>
+         <img alt="Votre Logo" className="navbar-brand-img " src={newLogo} style={{ width: "50px", height: "200px",borderRadius: "100%" }} />
+         <span className="navbar-brand-text">
+         
+           <h4 className="text-white">Direction Générale des Impôts</h4>
+          
+         </span>
+       </NavbarBrand>
         ) : null}
         <Nav className="align-items-center d-md-none">
           <UncontrolledDropdown nav>
@@ -260,11 +268,11 @@ const Sidebar_notif = (props) => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-arrow" right>
               <DropdownItem className="noti-title" header tag="div">
-                <h6 className="m-0 text-overflow">Welcome!</h6>
+                <h6 className="m-0 text-overflow">Bienvenue!</h6>
               </DropdownItem>
               <DropdownItem to="/admin/user-profile" tag={Link}>
                 <i className="ni ni-single-02" />
-                <span>My profile</span>
+                <span>Mon profil</span>
               </DropdownItem>
               <DropdownItem to="/admin/user-profile" tag={Link}>
                 <i className="ni ni-settings-gear-65" />
@@ -326,7 +334,7 @@ const Sidebar_notif = (props) => {
           <Nav navbar>
             {/* Badge des notifications */}
             <NavItem>
-              <NavLink to="/DPR_SAF/Demande" tag={NavLinkRRD} onClick={closeCollapse}>
+              <NavLink  className="text-white" to="/DPR_SAF/Demande" tag={NavLinkRRD} onClick={closeCollapse}>
                 <i className="ni ni-email-83 text-blue" />
                 Demandes 
                 {newNotifications > 0 && (

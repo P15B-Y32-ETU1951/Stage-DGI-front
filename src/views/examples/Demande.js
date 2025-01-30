@@ -86,9 +86,9 @@ const Demande = () => {
                                 <Row className="align-items-center">
                                     <Col xs="8">
                                     <blockquote className="blockquote text-right">
-                                        <p className="mb-0">
+                                        <h2 className="mb-0">
                                             Demande de Travaux
-                                        </p>
+                                        </h2>
                                         </blockquote>
                                     </Col>
                                     <hr className="my-4" />

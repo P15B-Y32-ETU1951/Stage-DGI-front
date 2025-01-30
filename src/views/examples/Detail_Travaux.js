@@ -143,9 +143,11 @@ const DetailTravaux = () => {
                     </div>
                     <h4><i class="ni ni-bold-right">{demande.reclamations[demande.reclamations.length-1].motif}</i></h4>
                     <div className="mt-4 text-center">
-                <Button color="warning" onClick={() => navigate(`/${authRole}/Travaux/reouverture/${demande.id}`)}>
+                { authRole === "DPR_SAF" &&(
+                  <Button color="warning" onClick={() => navigate(`/${authRole}/Travaux/reouverture/${demande.id}`)}>
                   Réouvrir les travaux
                 </Button>
+                )}
               </div>
                   </Col>
 

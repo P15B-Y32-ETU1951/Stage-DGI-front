@@ -111,7 +111,7 @@ const Suivi_Chef = () => {
           <div className="col">
             <Card className="shadow bg-default">
               <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
-                <h3 className="mb-0 text-white">Demandes Envoyées</h3>
+                <h3 className="mb-0 text-white">Suivi des demandes de travaux </h3>
                 <div>
                   <select 
                     className="form-control form-control-sm"
@@ -155,7 +155,11 @@ const Suivi_Chef = () => {
                         <td>{demande.motif}</td>
                         <td>
                           <Badge color="" className="mr-4 badge-dot">
-                            <i className={getStatusColor(demande.statut.id)} /> {demande.statut.description}
+                            {demande.statut.id === 1 ? (<><i className={getStatusColor(demande.statut.id)} /> en attente de validation</>)
+                            :
+                            (<><i className={getStatusColor(demande.statut.id)} /> {demande.statut.description}</>)
+                          }
+                           
                           </Badge>
                         </td>
                         <td>{new Date(demande.date).toLocaleDateString()}</td>

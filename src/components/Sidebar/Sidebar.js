@@ -50,6 +50,7 @@ import {
   Container,
   Row,
   Col,
+  Badge,
 } from "reactstrap";
 
 var ps;
@@ -59,6 +60,8 @@ import DashboardAlert from "views/examples/DashboardAlert";
 
 const Sidebar = (props) => {
   const token = localStorage.getItem('authToken');
+  const authRole = localStorage.getItem('authRole');
+  const [newNotifications, setNewNotifications] = useState(0);
   const [unplannedDemands, setUnplannedDemands] = useState(0);
   const [notif, setNotif] = useState(false);
 
@@ -128,24 +131,32 @@ const Sidebar = (props) => {
 
   useEffect(() => {
     fetchValidatedDemands();
+    fetchNotifications();
   }, [token]);
 
   // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
-    return routes.map((prop, key) => {
-      return (
-        <NavItem key={key}>
-          <NavLink
-            to={prop.layout + prop.path}
-            tag={NavLinkRRD}
-            onClick={closeCollapse}
-          >
-            <i className={prop.icon} />
-            {prop.name}
-          </NavLink>
-        </NavItem>
-      );
-    });
+    return routes.map((prop, key) => (
+      <NavItem key={key}>
+        <NavLink className="text-white"
+          to={prop.layout + prop.path}
+          tag={NavLinkRRD}
+          onClick={() => {closeCollapse;
+            markNotificationsAsSeen();
+          }
+          
+        }
+        >
+          <i className={prop.icon} />
+          {prop.name}
+          {prop.name === "Suivi des demandes" && newNotifications > 0 && (
+            <Badge color="danger" pill className="ml-2">
+              {newNotifications}
+            </Badge>
+          )}
+        </NavLink>
+      </NavItem>
+    ));
   };
 
   const { bgColor, routes, logo } = props;
@@ -162,9 +173,64 @@ const Sidebar = (props) => {
     };
   }
 
+
+  ///////
+  const [notifications, setNotifications] = useState([]);
+  const [notificationIds, setNotificationIds] = useState([]);
+  const [isNotif, setIsNotif] = useState( false );                      
+
+  // Fonction pour récupérer les notifications
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/CHEF_SERVICE/notif', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Erreur réseau lors de la récupération des notifications');
+      }
+      const data = await response.json();
+      setNotifications(data);
+      const ids = data.map(notification => notification.id);
+      setNotificationIds(ids);
+      setNewNotifications(data.length);
+      if(data.length >0){
+        setIsNotif(true);
+      }
+
+      
+    } catch (error) {
+      console.error('Erreur lors de la récupération des notifications :', error);
+    }
+  };
+
+  // Récupérer les notifications au montage
+  
+  const markNotificationsAsSeen = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/CHEF_SERVICE/notif/seen', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(notificationIds),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la mise à jour des notifications');
+      }
+
+      await fetchNotifications();
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des notifications :', error);
+    }
+  };
+
   return (
     <Navbar
-      className="bg-white navbar-vertical fixed-left navbar-light"
+      className="bg-default text-white navbar-vertical fixed-left navbar-light "
       expand="md"
       id="sidenav-main"
     >
@@ -179,16 +245,27 @@ const Sidebar = (props) => {
         </button>
         {/* Brand */}
         {logo ? (
-         <NavbarBrand className="pt-0" {...navbarBrandProps}>
-         <img alt="Votre Logo" className="navbar-brand-img" src={newLogo} />
+         <NavbarBrand className="pt-0 text-white" {...navbarBrandProps}>
+         <img alt="Votre Logo" className="navbar-brand-img " src={newLogo} style={{ width: "50px", height: "200px",borderRadius: "100%" }} />
          <span className="navbar-brand-text">
          
-           <p>Direction Générale des Impôts</p>
+           <h4 className="text-white">Direction Générale des Impôts</h4>
           
          </span>
        </NavbarBrand>
        
         ) : null}
+         <style>
+          {`
+            .rounded-logo {
+              width: 60px !important;
+              height: 60px !important;
+              border-radius: 50% !important;
+              object-fit: cover !important;
+              border: 2px solid white !important;
+            }
+          `}
+        </style>
         {/* User */}
         <Nav className="align-items-center d-md-none">
           <UncontrolledDropdown nav>
@@ -312,6 +389,11 @@ const Sidebar = (props) => {
           {
             notif===true &&(
               <DashboardAlert  titre={'Travaux Terminé(s)'} message={`vous avez ${unplannedDemands} travaux terminé(s) en attente de vos retours depuis 7 jours `} link={'/CHEF_SERVICE/Suivi'}/>
+            )
+          }
+           {
+            isNotif===true && authRole=='CHEF_SERVICE' &&(
+              <DashboardAlert  titre={'Nouvelles demandes'} message={`vous avez ${newNotifications} nouvelles demandes de travaux en attente de validation `} link={'/CHEF_SERVICE/index'}/>
             )
           }
         </Collapse>

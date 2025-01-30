@@ -21,7 +21,6 @@ const Detail = () => {
   const authRole = localStorage.getItem('authRole');
   const authToken = localStorage.getItem('authToken');
   const [motifRejet, setMotifRejet] = useState(''); // État pour le motif de rejet
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,6 +30,40 @@ const Detail = () => {
         "statut": 2,
         "id_demande": id
     };
+
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/statut`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            console.log('Demande validée avec succès');
+            
+            navigate(`/${authRole}/valider`);
+        } else {
+            console.error('Erreur lors de l\'envoi de la demande:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erreur réseau:', error);
+    }
+  };
+
+  const handleSubmit2 = async (e) => {
+    e.preventDefault();
+
+      
+
+    const data = {
+        "statut": 5,
+        "id_demande": id
+    };
+    
 
     try {
         const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/statut`, {
@@ -100,18 +133,7 @@ const Detail = () => {
                   <Col xs="8">
                     <h3 className="mb-0">{demande.service?.nom}</h3>
                   </Col>
-                  {/* Affichage conditionnel du bouton si authRole n'est pas "AGENT" */}
-                  { demande.statut?.id===1 && authRole==="CHEF_SERVICE" && (
-                    <Col className="text-right" xs="4">
-                      <Button
-                        color="success"
-                        onClick={(e) => handleSubmit(e)}
-                        size="sm"
-                      >
-                        Valider
-                      </Button>
-                    </Col>
-                  )}
+                
                 </Row>
               </CardHeader>
               <CardBody>
@@ -146,9 +168,35 @@ const Detail = () => {
                       />
                     </FormGroup>
                   </div>
+                   {/* Affichage conditionnel du bouton si authRole n'est pas "AGENT" */}
+                  { demande.statut?.id===1 && authRole==="CHEF_SERVICE" && (
+                   <Row className="justify-content-center">
+                      <Button
+                        color="success"
+                        onClick={(e) => handleSubmit(e)}
+                        size="large"
+                      >
+                        Valider
+                      </Button>
+                      <Button
+                        color="danger"
+                        onClick={() => navigate(`/${authRole}/rejet/${id}`)}
+                        size="large"
+                      >
+                        Rejetter
+                      </Button>
+                   
+                   
+                 
+                    </Row>
+                  )}
                 </Form>
                
+                 
+                 
+                 
               </CardBody>
+              
             </Card>
           </Col>
         </Row>

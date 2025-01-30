@@ -1,0 +1,26 @@
+.custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #0777f7;
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #0ba1ff;
+    border-radius: 10px;
+    border: 3px solid #21e1ff;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #0066ff;
+  }
+  
+  /* Ombre sur les éléments sélectionnés */
+  .custom-scrollbar option:checked {
+    background-color: #21e1ff;
+    color: white;
+    box-shadow: 0px 0px 10px rgba(33, 225, 255, 0.8);
+  }
+  

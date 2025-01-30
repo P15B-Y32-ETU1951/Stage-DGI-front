@@ -289,6 +289,14 @@ var routes = [
     component: <Demande />,
     layout: "/CHEF_SERVICE",
   },
+  {
+    path: "/Rejet/:id",
+    name: "Rejet",
+    icon: "ni ni-send text-blue",
+    component: <Rejet />,
+    layout: "/CHEF_SERVICE",
+
+  },
 
   {
     path: "/valider",

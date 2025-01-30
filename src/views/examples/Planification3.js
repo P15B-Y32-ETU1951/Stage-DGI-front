@@ -4,6 +4,9 @@ import { Container, Row, Card, CardHeader, Badge, Button, FormGroup, InputGroup,
 import ReactDatetime from 'react-datetime';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
+import style from 'assets/css/scrollbar.css'
+import { color, minHeight } from '@mui/system';
+
 
 const Planification3 = () => {
   const { id } = useParams();
@@ -292,6 +295,13 @@ const Planification3 = () => {
     return quantiteMax - quantiteUtilisee;
   };
 
+  const calculateTotalSelectedRessources = () => {
+    return selectedRessources.reduce((total, ressource) => {
+      return total + (ressource.valeurUnitaire || 0) * (ressource.quantite || 0);
+    }, 0);
+  };
+  
+
   return (
     <>
       <Header />
@@ -300,8 +310,8 @@ const Planification3 = () => {
           <Col md="6">
             {/* Carte pour les dates de planification */}
             <Card className="mb-4 shadow-sm bg-secondary">
-              <CardHeader className="bg-info">
-                <h5 className="mb-0"> Planification des Travaux</h5>
+              <CardHeader className="bg-default text-white">
+                <h5 className="mb-0 text-white"> Planification des Travaux</h5>
               </CardHeader>
               <CardBody>
                 <Row>
@@ -365,44 +375,45 @@ const Planification3 = () => {
 
           <Col md="6">
             {/* Sélecteur de ressources avec une carte */}
-            <Card className="mb-4 shadow-sm bg-secondary">
-              <CardHeader className="bg-info">
-                <h5 className="mb-0">Sélectionner des ressources :</h5>
+            <Card className="mb-4 shadow-sm bg-secondary" style={{minHeight: '340px'}}>
+              <CardHeader className="bg-default">
+                <h5 className="mb-0 text-white">Sélectionner des ressources </h5>
               </CardHeader>
               <CardBody>
-                <FormGroup>
-                  <select
-                    className="form-control"
-                    style={{ width: '100%', borderRadius: '10px' }}
-                    multiple
-                    onChange={(e) => handleSelectRessource(JSON.parse(e.target.value))}
-                  >
-                    <option disabled value="">
-                      -- Ressource -- Quantité disponible
-                    </option>
-                    {ressources.map((ressource) => {
-                      const quantiteDisponible = calculateQuantiteDisponible(ressource.id);
-                      return (
-                        <option
-                          key={ressource.id}
-                          value={JSON.stringify(ressource)}
-                          disabled={quantiteDisponible <= 0} // Désactiver si la ressource est épuisée
-                        >
-                          {ressource.nom} - ({quantiteDisponible} disponible)
-                        </option>
-                      );
-                    })}
+              <FormGroup>
+                <select
+                  className="form-control custom-scrollbar"
+                  style={{ width: '100%', borderRadius: '10px', minHeight: '200px' }}
+                  multiple
+                  onChange={(e) => handleSelectRessource(JSON.parse(e.target.value))}
+                >
+                  <option disabled value="">
+                    -- Ressource -- Quantité disponible
+                  </option>
+                  {ressources.map((ressource) => {
+                    const quantiteDisponible = calculateQuantiteDisponible(ressource.id);
+                    return (
+                      <option
+                        key={ressource.id}
+                        value={JSON.stringify(ressource)}
+                        disabled={quantiteDisponible <= 0}
+                      >
+                        {ressource.nom} - ({quantiteDisponible} disponible)
+                      </option>
+                    );
+                  })}
                   </select>
                 </FormGroup>
               </CardBody>
             </Card>
           </Col>
         </Row>
-
+       
         <hr className="my-4" />
-        <Card className="mb-4 shadow-sm bg-secondary">
-          <CardHeader className="bg-info">
-            <h5 className="mb-0">Ressources sélectionnées :</h5>
+        <Card className="mb-4 shadow-sm bg-secondary"  >
+          <CardHeader className="bg-default ">
+            <h5 className="mb-0 text-white">Ressources sélectionnées</h5>
+           
           </CardHeader>
           <CardBody>
             {selectedRessources.length > 0 ? (
