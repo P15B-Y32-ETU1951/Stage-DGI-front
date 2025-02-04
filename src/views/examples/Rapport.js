@@ -1,146 +1,172 @@
 import Header from 'components/Headers/Header';
-import { useNavigate } from 'react-router-dom'; // Importer useNavigate si vous utilisez React Router v6
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Badge, Button, Card, CardHeader, Container, DropdownItem, DropdownMenu, DropdownToggle, Media, Row, Table, UncontrolledDropdown } from 'reactstrap';
+import ReactDatetime from 'react-datetime';
+import { Button, Card, CardHeader, Container, Row, Table, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Media, FormGroup, InputGroup, InputGroupAddon, InputGroupText, Col, CardBody, Input } from 'reactstrap';
 
 const Rapport = () => {
   const [demandes, setDemandes] = useState([]);
-  const navigate = useNavigate(); // Utilisation du hook useNavigate
-  const authToken = localStorage.getItem('authToken');
-  const authRole = localStorage.getItem('authRole');
+  const [filteredDemandes, setFilteredDemandes] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [selectedService, setSelectedService] = useState("");
+  const [services, setServices] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchDemandes = async () => {
       try {
-      
+        const authToken = localStorage.getItem('authToken');
+        const authRole = localStorage.getItem('authRole');
         const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/9`, {
-          headers: {
-            'Authorization': `Bearer ${authToken}`
-          }
+          headers: { 'Authorization': `Bearer ${authToken}` }
         });
         const data = await response.json();
         setDemandes(data);
+        setFilteredDemandes(data);
       } catch (error) {
         console.error('Erreur lors de la récupération des demandes:', error);
       }
     };
 
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/auth/services');
+        const data = await response.json();
+        setServices(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des services:", error);
+      }
+    };
+
     fetchDemandes();
+    fetchServices();
   }, []);
 
-  const openFile = (rapportId) => {
-  const url = `http://localhost:8080/api/v1/${authRole}/download/${rapportId}`;
-  
-  // Ouvrir un nouvel onglet
-  const newTab = window.open('', '_blank');
-  
-  // Effectuer la requête fetch pour récupérer le fichier PDF
-  fetch(url, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${authToken}`, // Envoyer le token dans l'en-tête
-    },
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Failed to fetch the file');
-    }
-    return response.blob(); // Traiter la réponse en tant que Blob
-  })
-  .then(blob => {
-    // Créer une URL Blob pour le fichier téléchargé
-    const fileURL = URL.createObjectURL(blob);
-    
-    // Ouvrir l'URL Blob dans le nouvel onglet
-    newTab.location.href = fileURL;
-  })
-  .catch(error => console.error('Error opening file:', error));
-};
-  const handleFileChange = async (event, demandeId) => {
-    const file = event.target.files[0];
-    if (!file) return;
+  const filterDemandes = () => {
+    let filtered = demandes;
 
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const authToken = localStorage.getItem('authToken');
-    const authRole = localStorage.getItem('authRole');
-
-    try {
-      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/${demandeId}/upload`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: formData,
+    if (startDate && endDate) {
+      filtered = filtered.filter(demande => {
+        const dateDebut = new Date(demande.planification.dateDebut);
+        const dateFin = new Date(demande.planification.dateFin);
+        return dateDebut >= startDate && dateFin <= endDate;
       });
-
-      if (response.ok) {
-        console.log('Rapport importé avec succès');
-        // Rafraîchir la liste des demandes après l'importation
-        const updatedDemandes = demandes.map(demande =>
-          demande.id === demandeId ? { ...demande, rapport: true } : demande
-        );
-        setDemandes(updatedDemandes);
-      } else {
-        console.error('Erreur lors de l\'importation du rapport:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Erreur réseau:', error);
     }
+
+    if (selectedService) {
+      filtered = filtered.filter(demande => demande.service.nom === selectedService);
+    }
+
+    setFilteredDemandes(filtered);
   };
 
-  const sortByDateAsc = () => {
-    const sortedDemandes = [...demandes].sort((a, b) => new Date(a.date) - new Date(b.date));
-    setDemandes(sortedDemandes);
+  const resetFilters = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setSelectedService("");
+    setFilteredDemandes(demandes);
   };
 
-  const sortByDateDesc = () => {
-    const sortedDemandes = [...demandes].sort((a, b) => new Date(b.date) - new Date(a.date));
-    setDemandes(sortedDemandes);
-  };
+  useEffect(() => {
+    filterDemandes();
+  }, [startDate, endDate, selectedService, demandes]);
 
   return (
     <>
       <Header />
       <Container className="mt--7" fluid>
         <Row className="mt-5">
-          <div className="col">
+          <Col md="6">
+            <Card className="mb-4 shadow-sm bg-secondary">
+              <CardHeader className="bg-default">
+                <h5 className="mb-0 text-white">Filtrer entre deux dates</h5>
+              </CardHeader>
+              <CardBody>
+                <Row>
+                  <Col md="6">
+                    <FormGroup>
+                      <h5>Date de début</h5>
+                      <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="ni ni-calendar-grid-58" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <ReactDatetime
+                          inputProps={{ placeholder: "Sélectionnez la date de début" }}
+                          timeFormat={false}
+                          onChange={setStartDate}
+                          value={startDate}
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <h5>Date de fin</h5>
+                      <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="ni ni-calendar-grid-58" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <ReactDatetime
+                          inputProps={{ placeholder: "Sélectionnez la date de fin" }}
+                          timeFormat={false}
+                          onChange={setEndDate}
+                          value={endDate}
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col md="6">
+            <Card className="mb-4 shadow-sm bg-secondary">
+              <CardHeader className="bg-default">
+                <h5 className="mb-0 text-white">Filtrer par service</h5>
+              </CardHeader>
+              <CardBody>
+                <FormGroup>
+                  <h5>Service</h5>
+                  <Input type="select" value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
+                    <option value="">Tous les services</option>
+                    {services.map(service => (
+                      <option key={service.id} value={service.nom}>{service.nom}</option>
+                    ))}
+                  </Input>
+                </FormGroup>
+                <Button color="warning" onClick={resetFilters}>Réinitialiser les filtres</Button>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row className="mt-5">
+          <Col>
             <Card className="shadow bg-default">
               <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
                 <h3 className="mb-0 text-white">Rapports des Travaux</h3>
-                <div>
-                  <Button color="info" size="sm" onClick={sortByDateAsc}>
-                    <i className="ni ni-bold-up" />
-                  </Button>
-                  <Button color="info" size="sm" onClick={sortByDateDesc} className="ml-2">
-                    <i className="ni ni-bold-down" />
-                  </Button>
-                </div>
               </CardHeader>
               <Table className="align-items-center table-dark table-flush" responsive>
                 <thead className="thead-dark">
                   <tr>
-                    <th scope="col">Service demandeur</th>
-                    <th scope="col">Motif</th>
-                    <th scope="col">Date de début</th>
-                    <th scope="col">Date de fin</th>
-                    <th scope="col">Rapport</th>
-                    <th scope="col" />
+                    <th>Service demandeur</th>
+                    <th>Motif</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Rapport</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {demandes.length > 0 ? (
-                    demandes.map((demande) => (
+                  {filteredDemandes.length > 0 ? (
+                    filteredDemandes.map(demande => (
                       <tr key={demande.id}>
-                        <th scope="row">
-                          <Media className="align-items-center">
-                            <Media>
-                              <span className="mb-0 text-sm">
-                                {demande.service.nom}
-                              </span>
-                            </Media>
-                          </Media>
-                        </th>
+                        <td>{demande.service.nom}</td>
                         <td>{demande.motif}</td>
                         <td>{demande.planification.dateDebut}</td>
                         <td>{demande.planification.dateFin}</td>
@@ -164,38 +190,17 @@ const Rapport = () => {
                           </button>
                         )}
                       </td>
-                        <td className="text-right">
-                          <UncontrolledDropdown>
-                            <DropdownToggle
-                              className="btn-icon-only text-light"
-                              href="#pablo"
-                              role="button"
-                              size="sm"
-                              color=""
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              <i className="fas fa-ellipsis-v" />
-                            </DropdownToggle>
-                            <DropdownMenu className="dropdown-menu-arrow" right>
-                              <DropdownItem
-                                onClick={() => navigate(`/DPR_SAF/Planification/travaux/${demande.id}`)}
-                              >
-                                Detail
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledDropdown>
-                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="7" className="text-center">Aucun Travaux receptionné</td>
+                      <td colSpan="4" className="text-center">Aucun rapport trouvé</td>
                     </tr>
                   )}
                 </tbody>
               </Table>
             </Card>
-          </div>
+          </Col>
         </Row>
       </Container>
     </>

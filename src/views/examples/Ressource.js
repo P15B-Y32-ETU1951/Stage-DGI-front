@@ -1,32 +1,39 @@
 import Header from 'components/Headers/Header';
-import { useNavigate } from 'react-router-dom'; // Importer useNavigate si vous utilisez React Router v6
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Badge, Button, Card, CardHeader, Container, DropdownItem, DropdownMenu, DropdownToggle, Media, Row, Table, UncontrolledDropdown } from 'reactstrap';
+import { Button, Card, CardHeader, Container, Row, Table, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Media, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 
 const Ressource = () => {
-  const [ressources, setressources] = useState([]);
-  const navigate = useNavigate(); // Utilisation du hook useNavigate
+  const [ressources, setRessources] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredRessources, setFilteredRessources] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchressources = async () => {
+    const fetchRessources = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
         const authRole = localStorage.getItem('authRole');
         const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource`, {
-          headers: {
-            'Authorization': `Bearer ${authToken}`
-          }
+          headers: { 'Authorization': `Bearer ${authToken}` }
         });
         const data = await response.json();
-        setressources(data);
+        setRessources(data);
+        setFilteredRessources(data);
       } catch (error) {
         console.error('Erreur lors de la récupération des ressources:', error);
       }
     };
 
-    fetchressources();
+    fetchRessources();
   }, []);
 
+  useEffect(() => {
+    const filtered = ressources.filter(ressource => 
+      ressource.nom.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredRessources(filtered);
+  }, [searchTerm, ressources]);
 
   return (
     <>
@@ -35,70 +42,72 @@ const Ressource = () => {
         <Row className="mt-5">
           <div className="col">
             <Card className="shadow bg-default">
-              <CardHeader className="bg-transparent border-0">
-                <h3 className="mb-0 text-white"> Ressources </h3>
+              <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
+                <h3 className="mb-0 text-white">Ressources</h3>
+                <InputGroup style={{ maxWidth: '400px', width: '100%' }}>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-zoom-split-in" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    type="text"
+                    placeholder="Rechercher des ressources..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </InputGroup>
               </CardHeader>
+
               <Table className="align-items-center table-dark table-flush" responsive>
                 <thead className="thead-dark">
                   <tr>
-                    <th scope="col">Nom</th>
-                    <th scope="col">quantité disponible</th>
-                    <th scope="col">prix unitaire</th>
-                    <th scope="col">  
-                        <Button className="btn-icon btn-2" 
-                        color="info" 
+                    <th>Nom</th>
+                    <th>Quantité disponible</th>
+                    <th>Prix unitaire</th>
+                    <th>
+                      <Button
+                        className="btn-icon btn-2"
+                        color="info"
                         type="button"
                         onClick={() => navigate('/DPR_SAF/ressource/ajouter')}
-                        
-                        >
-                            <span className="btn-inner--icon">
-                                <i className="ni ni-fat-add" />
-                            </span>
+                      >
+                        <span className="btn-inner--icon">
+                          <i className="ni ni-fat-add" />
+                        </span>
                         <span className="btn-inner--text">Ajouter des Ressources</span>
-                        </Button>
-                    </th> 
+                      </Button>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ressources.length > 0 ? (
-                    ressources.map((ressource) => (
+                  {filteredRessources.length > 0 ? (
+                    filteredRessources.map((ressource) => (
                       <tr key={ressource.id}>
                         <th scope="row">
                           <Media className="align-items-center">
                             <Media>
-                              <span className="mb-0 text-sm">
-                                {ressource.nom} 
-                              </span>
+                              <span className="mb-0 text-sm">{ressource.nom}</span>
                             </Media>
                           </Media>
                         </th>
                         <td>{ressource.quantite}</td>
-                       
                         <td>{ressource.valeurUnitaire.toLocaleString('en-US')}</td>
                         <td>
-                        <button
-                          className="btn btn-sm btn-success"
-                          color='success'
-                       
-                        onClick={() => navigate('/DPR_SAF/ressource/ajouter')}
-                        
-                        >
-                            
-                                <i className="ni ni-fat-add" />
-                                Approvisionner
-                        </button>                       
+                          <Button
+                            className="btn btn-sm btn-success"
+                            onClick={() => navigate('/DPR_SAF/ressource/ajouter')}
+                          >
+                            <i className="ni ni-fat-add" /> Approvisionner
+                          </Button>
                         </td>
-                        
-                       
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="5" className="text-center">Aucune ressource à afficher</td>
+                      <td colSpan="4" className="text-center">Aucune ressource à afficher</td>
                     </tr>
-
                   )}
-                  
                 </tbody>
               </Table>
             </Card>

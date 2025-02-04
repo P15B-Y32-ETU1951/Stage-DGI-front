@@ -171,7 +171,7 @@ const Historique = () => {
           <Col>
             <Card className="shadow bg-default">
               <CardHeader className="bg-transparent border-0 d-flex justify-content-between align-items-center">
-                <h3 className="mb-0 text-white">Rapports des Travaux</h3>
+                <h3 className="mb-0 text-white">Travaux clôturés</h3>
                 <div>
                   <Button color="info" size="sm" onClick={sortByDateAsc}>
                     <i className="ni ni-bold-up" />
