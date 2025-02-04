@@ -45,21 +45,26 @@ const Rapport = () => {
 
   const filterDemandes = () => {
     let filtered = demandes;
-
+  
     if (startDate && endDate) {
+      // Ajout d'un jour à la date de fin
+      const adjustedEndDate = new Date(endDate);
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+  
       filtered = filtered.filter(demande => {
         const dateDebut = new Date(demande.planification.dateDebut);
         const dateFin = new Date(demande.planification.dateFin);
-        return dateDebut >= startDate && dateFin <= endDate;
+        return dateDebut >= startDate && dateFin < adjustedEndDate;
       });
     }
-
+  
     if (selectedService) {
       filtered = filtered.filter(demande => demande.service.nom === selectedService);
     }
-
+  
     setFilteredDemandes(filtered);
   };
+  
 
   const resetFilters = () => {
     setStartDate(null);
