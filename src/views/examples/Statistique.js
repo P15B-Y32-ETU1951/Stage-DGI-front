@@ -15,6 +15,7 @@ const Statistique = () => {
   const authToken = localStorage.getItem('authToken');
   const authRole = localStorage.getItem('authRole');
   const [demandes, setDemandes] = useState([]);
+  const [demandeparstatut, setdemandeparstatut] = useState([]);
   const [services, setServices] = useState([]);
   const [statut, setStatut] = useState([]);
   const [pieData, setPieData] = useState([]);
@@ -27,9 +28,18 @@ const Statistique = () => {
   const [travauxParMois, setTravauxParMois] = useState([]);
 
   const colors = [
-    '#D32F2F', '#1976D2', '#388E3C', '#FBC02D', '#8E24AA',
-    '#0088D1', '#C2185B', '#E91E63', '#FF5722', '#009688'
+    '#FF6F61', // Corail doux
+    '#6B5B95', // Violet profond
+    '#88B04B', // Vert olive clair
+    '#F7CAC9', // Rose poudré
+    '#92A8D1', // Bleu gris pervenche
+    '#955251', // Marron prune
+    '#B565A7', // Mauve vibrant
+    '#009B77', // Vert émeraude
+    '#DD4124', // Rouge tomate épicé
+    '#45B8AC'  // Turquoise doux
   ];
+  
   const mois = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -47,6 +57,22 @@ const Statistique = () => {
         const data = await response.json();
         setDemandes(data);
         console.log('demande',data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des demandes:', error);
+      }
+    };
+    const fetchStatutsDemandes = async () => {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        const authRole = localStorage.getItem('authRole');
+        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/statistique/allstatutdemandes`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+        const data = await response.json();
+        setdemandeparstatut(data);
+        console.log('demande:------',data);
       } catch (error) {
         console.error('Erreur lors de la récupération des demandes:', error);
       }
@@ -108,14 +134,29 @@ const Statistique = () => {
     fetchStatuts();
     fetchRessources();
     fetchRessourceTravaux();
+    fetchStatutsDemandes();
   }, [authRole, authToken]);
 
   useEffect(() => {
     const calculateDemandesParStatut = () => {
-      const totalDemandes = demandes.length;
+      const totalDemandes = demandeparstatut.length;
       const demandesParStatut = statut.map((status, index) => {
-        const nombre = demandes.filter(demande => demande.statut.id === status.id).length;
-        const percentage = ((nombre / totalDemandes) * 100).toFixed(2);
+        let nombre = demandeparstatut.filter(demande => demande.statut.id === status.id).length;
+    
+        if (status.id === 7) {
+          nombre=demandes.filter(demande => demande.statut.id === 7).length;
+        }
+        if (status.id === 8) {
+          nombre=demandes.filter(demande => demande.statut.id === 8).length;
+        }
+        if (status.id === 9) {
+          nombre=demandes.filter(demande => demande.statut.id === 9).length;
+        }
+        if (status.id === 10) {
+          nombre=demandes.filter(demande => demande.statut.id === 10).length;
+        }
+    
+        const percentage = nombre; // ((nombre / totalDemandes) * 100).toFixed(2);
         return { 
           id: status.id, 
           value: parseFloat(percentage), 
@@ -123,9 +164,10 @@ const Statistique = () => {
           color: colors[index % colors.length]
         };
       });
-
+    
       setPieData(demandesParStatut);
     };
+    
     const CalculRessourceTravaux = () => {
       
       // Calcul du budget total pour chaque ressource
@@ -313,7 +355,7 @@ const Statistique = () => {
                   series={[
                     {
                       data: pieData,
-                      arcLabel: (item) => `${item.value}%`,
+                      //arcLabel: (item) => `${item.value}`,
                       arcLabelRadius: '60%',
                       colorByPoint: true,
                       getColor: (item, index) => pieData[index].color,
