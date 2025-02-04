@@ -93,7 +93,7 @@ const Demande = () => {
                                     </Col>
                                     <hr className="my-4" />
                                     <p className="heading-small text-muted mb-4">
-                                        Les demandes de travaux seront envoyées à la Direction de la Programmation des Ressources après validation de votre Chef de Service.
+                                        Les demandes de travaux seront envoyées à la Direction de la Programmation des Ressources au service administratif financier après validation de votre Chef de Service.
                                     </p>
                                 </Row>
                             </CardHeader>

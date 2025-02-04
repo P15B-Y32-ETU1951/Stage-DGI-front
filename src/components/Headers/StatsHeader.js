@@ -1,33 +1,29 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import logo from "../../assets/img/theme/DGI2.png";
 
-const StatsHeader = ({valide,rejet,ressource,total}) => {
+const StatsHeader = ({ valide, rejet, total }) => {
   return (
     <>
       <div className="pt-5 pb-8 header bg-gradient-info pt-md-8">
         <Container fluid>
           <div className="header-body">
-          <Row>
-              <Col lg="6" xl="3">
-                <Card className="mb-4 card-stats mb-xl-0">
+            {/* Logo centré */}
+            <Row className="justify-content-center mb-4">
+              <Col xs="12" className="text-center">
+                <img
+                  src={logo}
+                  alt="Logo Direction Générale des Impôts"
+                  className="img-fluid"
+                  style={{ maxWidth: "250px", height: "auto" }}
+                />
+              </Col>
+            </Row>
+
+            {/* Cartes alignées horizontalement et centrées */}
+            <Row className="justify-content-center">
+              <Col lg="4" md="6">
+                <Card className="mb-4 card-stats">
                   <CardBody>
                     <Row>
                       <div className="col">
@@ -38,7 +34,7 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                           Demandes validées
                         </CardTitle>
                         <span className="mb-0 h2 font-weight-bold">
-                        {valide.nombre}
+                          {valide.nombre}
                         </span>
                       </div>
                       <Col className="col-auto">
@@ -49,16 +45,15 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                     </Row>
                     <p className="mt-3 mb-0 text-sm text-muted">
                       <span className="mr-2 text-success">
-                       
                         {valide.pourcentage} %
-                      </span>{" "}
-                     
+                      </span>
                     </p>
                   </CardBody>
                 </Card>
               </Col>
-              <Col lg="6" xl="3">
-                <Card className="mb-4 card-stats mb-xl-0">
+
+              <Col lg="4" md="6">
+                <Card className="mb-4 card-stats">
                   <CardBody>
                     <Row>
                       <div className="col">
@@ -66,10 +61,10 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                           tag="h5"
                           className="mb-0 text-uppercase text-muted"
                         >
-                          Demandes rejettées
+                          Demandes rejetées
                         </CardTitle>
                         <span className="mb-0 h2 font-weight-bold">
-                        {rejet.nombre}
+                          {rejet.nombre}
                         </span>
                       </div>
                       <Col className="col-auto">
@@ -80,43 +75,38 @@ const StatsHeader = ({valide,rejet,ressource,total}) => {
                     </Row>
                     <p className="mt-3 mb-0 text-sm text-muted">
                       <span className="mr-2 text-success">
-                       
                         {rejet.pourcentage} %
-                      </span>{" "}
-                     
+                      </span>
                     </p>
                   </CardBody>
                 </Card>
               </Col>
-              <Col lg="6" xl="3">
-              <Card className="mb-4 card-stats mb-xl-0">
-                <CardBody>
-                  <Row>
-                    <div className="col">
-                      <CardTitle
-                        tag="h5"
-                        className="mb-0 text-uppercase text-muted"
-                      >
-                        Valeur dépensée en ressource
-                      </CardTitle>
-                      <span className="mb-0 h2 font-weight-bold">
-                      {total} Ar
-                      </span>
-                    </div>
-                    <Col className="col-auto">
-                      <div className="text-white shadow icon icon-shape bg-info rounded-circle">
-                        <i className="ni ni-money-coins" />
+
+              <Col lg="4" md="6">
+                <Card className="mb-4 card-stats" style={{ height: "122px" }}>
+                  <CardBody>
+                    <Row>
+                      <div className="col">
+                        <CardTitle
+                          tag="h5"
+                          className="mb-0 text-uppercase text-muted"
+                        >
+                          Valeur dépensée en ressource
+                        </CardTitle>
+                        <span className="mb-0 h2 font-weight-bold">
+                          {total} Ar
+                        </span>
                       </div>
-                    </Col>
-                  </Row>
-                  <p className="mt-3 mb-0 text-sm text-muted">
-                   
-                   
-                  </p>
-                </CardBody>
-              </Card>
-            </Col>
-              </Row>
+                      <Col className="col-auto">
+                        <div className="text-white shadow icon icon-shape bg-info rounded-circle">
+                          <i className="ni ni-money-coins" />
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
           </div>
         </Container>
       </div>

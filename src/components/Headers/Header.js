@@ -18,21 +18,23 @@
 
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import logo from "../../assets/img/theme/DGI2.png";
 
 const Header = () => {
   return (
     <>
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
-        <Container fluid>
-          <div className="header-body">
-            {/* Card stats */}
-            <Row>
-              
-             
-             
-               
-             
-             
+      <Container fluid>
+          <div className="header-body text-center">
+            <Row className="justify-content-center">
+              <Col md="6" className="text-center">
+                <img
+                  src={logo}
+                  alt="Logo Direction Générale des Impôts"
+                  className="img-fluid"
+                  style={{ maxHeight: "none",width: "250px", height: "auto" }} // Ajuste la taille selon ton besoin
+                />
+              </Col>
             </Row>
           </div>
         </Container>

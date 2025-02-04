@@ -20,6 +20,7 @@ import ReCAPTCHA from "react-google-recaptcha"; // Importez ReCAPTCHA
 const Login = () => {
   const authToken = localStorage.getItem("authToken");
   const authRole = localStorage.getItem("authRole");
+  const token_expiration = localStorage.getItem("token_expiration");
   const [captchaValue, setCaptchaValue] = useState(null);
   const [utilisateur, setUtilisateur] = useState({
     email: "",
@@ -32,10 +33,11 @@ const Login = () => {
 
   // Redirection si l'utilisateur est déjà connecté
   useEffect(() => {
-    if (authToken && authRole) {
+    if (authToken && authRole && token_expiration && token_expiration > Date.now()) {
       navigate(`/${authRole}/index`);
     }
-  }, [authToken, authRole, navigate]);
+  }, [authToken, authRole, token_expiration, navigate]);
+  
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -89,6 +91,8 @@ const Login = () => {
         } else {
           const token = data.token;
           const role = data.role;
+          const token_expiration=data.token_expiration;
+          localStorage.setItem("token_expiration", token_expiration);
           localStorage.setItem("authToken", token);
           localStorage.setItem("authRole", role);
           navigate(`/${role}/index`);
@@ -134,7 +138,7 @@ const Login = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Password"
+                    placeholder="Mot de Passe"
                     type="password"
                     autoComplete="new-password"
                     name="password"
@@ -154,7 +158,7 @@ const Login = () => {
 
               <div className="text-center">
                 <Button className="my-4" color="primary" type="submit">
-                  Sign in
+                  Se connecter
                 </Button>
               </div>
             </Form>

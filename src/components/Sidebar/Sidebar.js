@@ -54,7 +54,7 @@ import {
 } from "reactstrap";
 
 var ps;
-import newLogo from "../../assets/img/theme/DGI.png";
+import newLogo from "../../assets/img/theme/DGI1.png";
 import DashboardAlert from "views/examples/DashboardAlert";
 
 
@@ -246,26 +246,26 @@ const Sidebar = (props) => {
         {/* Brand */}
         {logo ? (
          <NavbarBrand className="pt-0 text-white" {...navbarBrandProps}>
-         <img alt="Votre Logo" className="navbar-brand-img " src={newLogo} style={{ width: "50px", height: "200px",borderRadius: "100%" }} />
-         <span className="navbar-brand-text">
-         
-           <h4 className="text-white">Direction Générale des Impôts</h4>
-          
-         </span>
+         <img alt="Votre Logo"  src={newLogo} 
+            style={{
+              width: "300px",
+              height: "150px", // Change cette valeur selon ton besoin
+              maxWidth: "100%",
+              maxHeight: "none",
+              display: "block"
+            }}
+          />
+         <span className="navbar-brand-text text-wrap" style={{ whiteSpace: "normal", wordWrap: "break-word" }}>
+            <h4 className="text-white text-center">
+              Ministère de l’Economie et des Finances
+            </h4>
+          </span>
+
+        
        </NavbarBrand>
        
         ) : null}
-         <style>
-          {`
-            .rounded-logo {
-              width: 60px !important;
-              height: 60px !important;
-              border-radius: 50% !important;
-              object-fit: cover !important;
-              border: 2px solid white !important;
-            }
-          `}
-        </style>
+        
         {/* User */}
         <Nav className="align-items-center d-md-none">
           <UncontrolledDropdown nav>
