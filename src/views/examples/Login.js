@@ -33,8 +33,11 @@ const Login = () => {
 
   // Redirection si l'utilisateur est déjà connecté
   useEffect(() => {
-    if (authToken && authRole && token_expiration && token_expiration > Date.now()) {
-      navigate(`/${authRole}/index`);
+    if (authToken && authRole && token_expiration) {
+      const tokenExpirationDate = new Date(token_expiration); // Conversion de la chaîne en objet Date
+      if (tokenExpirationDate > new Date()) { // Comparaison correcte des deux dates
+        navigate(`/${authRole}/index`);
+      }
     }
   }, [authToken, authRole, token_expiration, navigate]);
   
@@ -95,6 +98,7 @@ const Login = () => {
           localStorage.setItem("token_expiration", token_expiration);
           localStorage.setItem("authToken", token);
           localStorage.setItem("authRole", role);
+          console.log("token_expiration", token_expiration);
           navigate(`/${role}/index`);
         }
       } else {

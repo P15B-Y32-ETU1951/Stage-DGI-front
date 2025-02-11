@@ -96,7 +96,7 @@ const Ressource = () => {
                         <td>
                           <Button
                             className="btn btn-sm btn-success"
-                            onClick={() => navigate('/DPR_SAF/ressource/ajouter')}
+                            onClick={() => navigate(`/DPR_SAF/ressource/approvisionner/${ressource.id}`)}
                           >
                             <i className="ni ni-fat-add" /> Approvisionner
                           </Button>

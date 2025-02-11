@@ -69,6 +69,9 @@ const Auth = (props) => {
                   </p>
                 </Col>
               </Row>
+              <Row className="justify-content-center">
+              
+              </Row>
             </div>
           </Container>
           <div className="separator separator-bottom separator-skew zindex-100">

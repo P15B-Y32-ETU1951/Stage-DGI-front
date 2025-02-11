@@ -28,6 +28,8 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import logo from "../../assets/img/theme/DGI2.png";
+
 
 const AdminNavbar = () => {
   return (
@@ -44,7 +46,7 @@ const AdminNavbar = () => {
                   <Link to="/">
                     <img
                       alt="..."
-                      src={require("../../assets/img/brand/argon-react.png")}
+                      src={logo}
                     />
                   </Link>
                 </Col>
@@ -57,6 +59,7 @@ const AdminNavbar = () => {
               </Row>
             </div>
             <Nav className="ml-auto" navbar>
+              
               <NavItem>
                 <NavLink
                   className="nav-link-icon"
@@ -72,6 +75,7 @@ const AdminNavbar = () => {
                   <i className="ni ni-key-25" />
                   <span className="nav-link-inner--text">Se Connecter</span>
                 </NavLink>
+
               </NavItem>
             </Nav>
           </UncontrolledCollapse>

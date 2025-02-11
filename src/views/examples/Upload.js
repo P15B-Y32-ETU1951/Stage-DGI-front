@@ -19,9 +19,21 @@ const UploadFileComponent = () => {
   const navigate = useNavigate(); // Utilisé pour naviguer vers une autre page
 
   // Fonction pour gérer la sélection du fichier
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  // Fonction pour gérer la sélection du fichier
+const handleFileChange = (e) => {
+  const selectedFile = e.target.files[0];
+  if (selectedFile) {
+    // Vérifier le type MIME du fichier
+    if (selectedFile.type !== "application/pdf") {
+      alert("Seuls les fichiers PDF sont autorisés.");
+      e.target.value = ""; // Réinitialiser le champ de sélection du fichier
+      setFile(null);
+      return;
+    }
+    setFile(selectedFile);
+  }
+};
+
 
   // Fonction pour gérer l'upload
   const handleUpload = async () => {

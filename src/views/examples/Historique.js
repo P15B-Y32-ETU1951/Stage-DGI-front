@@ -26,6 +26,7 @@ const Historique = () => {
         const data = await response.json();
         setDemandes(data);
         setFilteredDemandes(data);
+        console.log('demandes++++', data);
       } catch (error) {
         console.error('Erreur lors de la récupération des demandes:', error);
       }
