@@ -11,6 +11,8 @@ import { color, minHeight } from '@mui/system';
 const Planification3 = () => {
   const { id } = useParams();
   const [ressources, setRessources] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredRessources, setFilteredRessources] = useState([]);
   const [etapes, setEtapes] = useState([]);
   const [selectedRessources, setSelectedRessources] = useState([]);
   const [dateDebut, setDateDebut] = useState(null);
@@ -300,6 +302,13 @@ const Planification3 = () => {
       return total + (ressource.valeurUnitaire || 0) * (ressource.quantite || 0);
     }, 0);
   };
+
+  useEffect(() => {
+    const filtered = ressources.filter(ressource => 
+      ressource.nom.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredRessources(filtered);
+  }, [searchTerm, ressources]);
   
 
   return (
@@ -377,10 +386,30 @@ const Planification3 = () => {
             {/* Sélecteur de ressources avec une carte */}
             <Card className="mb-4 shadow-sm bg-secondary" style={{minHeight: '340px'}}>
               <CardHeader className="bg-default">
-                <h5 className="mb-0 text-white">Sélectionner des ressources </h5>
+                <Row>
+                  <Col md="6">
+                    <h5 className="mb-0 text-white">Sélectionner des ressources </h5>
+                  </Col>
+                  <Col md="6" className="text-right">
+                  <input
+                      type="text"
+                      placeholder=""
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+               
+               
               </CardHeader>
               <CardBody>
               <FormGroup>
+                <Row >
+                  <Col md="6">
+                    
+                  </Col>
+                </Row>
+
                 <select
                   className="form-control custom-scrollbar"
                   style={{ width: '100%', borderRadius: '10px', minHeight: '200px' }}
@@ -390,7 +419,7 @@ const Planification3 = () => {
                   <option disabled value="">
                     -- Ressource -- Quantité disponible
                   </option>
-                  {ressources.map((ressource) => {
+                  {filteredRessources.map((ressource) => {
                     const quantiteDisponible = calculateQuantiteDisponible(ressource.id);
                     return (
                       <option
