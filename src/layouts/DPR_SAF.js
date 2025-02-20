@@ -64,7 +64,9 @@ const DPR_SAF = (props) => {
         route.name!=="Demandes " &&
         route.name!=="T1" &&
         route.name!=="T2" &&
-        route.name!=="Documents"
+        route.name!=="Documents" &&
+        route.name!== "modifier"
+        
        
 
 

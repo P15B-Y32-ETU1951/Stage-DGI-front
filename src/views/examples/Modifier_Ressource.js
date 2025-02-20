@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Button,
   Card,
@@ -13,8 +13,10 @@ import {
   Label,
 } from "reactstrap";
 import UserHeader from "components/Headers/UserHeader.js";
+import { useParams } from "react-router-dom";
 
-const Ajouter_Ressource = () => {
+const Modifier_Ressource = () => {
+    const{id} = useParams();
   // State pour les valeurs des champs
   const [nom, setNom] = useState("");
   const [quantite, setQuantite] = useState(0);
@@ -22,6 +24,7 @@ const Ajouter_Ressource = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  
 
   // Fonction de soumission du formulaire
   const handleSubmit = async (e) => {
@@ -30,39 +33,67 @@ const Ajouter_Ressource = () => {
     setError(null);
     setSuccess(false);
 
+    // Vérification des valeurs
+    if (quantite < 1 || valeurUnitaire < 1) {
+        setError("Les valeurs de quantité et de valeur unitaire doivent être supérieures ou égales à 1.");
+        setLoading(false);
+        return;
+    }
+
     const data = {
-      nom: nom,
-      quantite: parseInt(quantite), // S'assurer que c'est un nombre
-      valeurUnitaire: parseInt(valeurUnitaire), // S'assurer que c'est un nombre
+        id: id,
+        nom: nom,
+        quantite: parseInt(quantite), // S'assurer que c'est un nombre
+        valeurUnitaire: parseInt(valeurUnitaire) // S'assurer que c'est un nombre
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/DPR_SAF/ressource", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-        body: JSON.stringify(data),
-      });
+        const response = await fetch(`http://localhost:8080/api/v1/DPR_SAF/ressource/modifier`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+            body: JSON.stringify(data),
+        });
 
-      if (!response.ok) {
-        throw new Error(`Erreur ${response.status}: ${response.statusText}`);
-      }
+        if (!response.ok) {
+            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
 
-      setSuccess(true);
-      setNom("");
-      setQuantite(0);
-      setValeurUnitaire(0);
-      console.log("Ressource ajoutée avec succès");
+        setSuccess(true);
+        console.log("Ressource modifiée avec succès");
     } catch (error) {
-      setError(error.message);
-      console.error("Erreur lors de l'envoi:", error);
+        setError(error.message);
+        console.error("Erreur lors de l'envoi:", error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
+  useEffect(()=>{
+    const fetchressource= async ()=>{
+        try{
+            const response=await fetch(`http://localhost:8080/api/v1/DPR_SAF/ressource/${id}`,{
+                method:"GET",
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:`Bearer ${localStorage.getItem("authToken")}`
+                }
+            });
+            if(!response.ok){
+                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+            }
+            const data=await response.json();
+            setNom(data.nom);
+            setQuantite(data.quantite);
+            setValeurUnitaire(data.valeurUnitaire);
+        }catch(error){
+            console.error("Erreur lors de la récupération de la ressource:",error);
+        }
+    };
+    fetchressource();
+  },[id]);
   return (
     <>
       <UserHeader />
@@ -74,7 +105,7 @@ const Ajouter_Ressource = () => {
               <CardHeader className="bg-white border-0" >
                 <Row className="align-items-center">
                   <Col xs="8">
-                    <h3 className="mb-0">Ajouter une Ressource</h3>
+                    <h3 className="mb-0">Modifier la ressource </h3>
                   </Col>
                 </Row>
               </CardHeader>
@@ -112,12 +143,12 @@ const Ajouter_Ressource = () => {
                       required
                     />
                   </FormGroup>
-                  <Button color="primary" type="submit" disabled={loading}>
-                    {loading ? "Envoi..." : "Ajouter Ressource"}
+                  <Button color="success" type="submit" disabled={loading}>
+                    {loading ? "Envoi..." : "Enregistrer les modifications"}
                   </Button>
                 </Form>
                 {error && <p className="text-danger mt-3">Erreur: {error}</p>}
-                {success && <p className="text-success mt-3">Ressource ajoutée avec succès !</p>}
+                {success && <p className="text-success mt-3">Ressource modifiée avec succès !</p>}
               </CardBody>
             </Card>
           </Col>
@@ -127,4 +158,4 @@ const Ajouter_Ressource = () => {
   );
 };
 
-export default Ajouter_Ressource;
+export default Modifier_Ressource;

@@ -58,6 +58,7 @@ import Planification2 from "views/examples/Planification2";
 import Planification3 from "views/examples/Planification3";
 import Reouverture2 from "views/examples/Reouverture2";
 import Forgot_Password from "views/examples/Forgot_Password";
+import Modifier_Ressource from "views/examples/Modifier_Ressource";
 
 var routes = [
   {
@@ -145,6 +146,13 @@ var routes = [
     name: "Approvisionner",
     icon: "ni ni-delivery-fast text-blue",
     component: <Approvisionnement />,
+    layout: "/DPR_SAF",
+  },
+  {
+    path: "/ressource/modifier/:id",
+    name: "modifier",
+    icon: "ni ni-delivery-fast text-blue",
+    component: <Modifier_Ressource />,
     layout: "/DPR_SAF",
   },
   {

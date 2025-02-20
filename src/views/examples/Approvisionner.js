@@ -60,7 +60,7 @@ const Approvisionnement = () => {
 
       if (response.ok) {
         alert('Réapprovisionnement effectué avec succès !');
-        navigate(`/${authRole}/ressources`);
+        navigate(`/${authRole}/ressource`);
       } else {
         alert('Une erreur est survenue lors du réapprovisionnement.');
       }

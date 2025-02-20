@@ -65,8 +65,8 @@ const Ressource = () => {
                     <th>Nom</th>
                     <th>Quantité disponible</th>
                     <th>Prix unitaire</th>
-                    <th>
-                      <Button
+                    <th></th>
+                    <th><Button
                         className="btn-icon btn-2"
                         color="info"
                         type="button"
@@ -76,8 +76,7 @@ const Ressource = () => {
                           <i className="ni ni-fat-add" />
                         </span>
                         <span className="btn-inner--text">Ajouter des Ressources</span>
-                      </Button>
-                    </th>
+                      </Button></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,6 +98,14 @@ const Ressource = () => {
                             onClick={() => navigate(`/DPR_SAF/ressource/approvisionner/${ressource.id}`)}
                           >
                             <i className="ni ni-fat-add" /> Approvisionner
+                          </Button>
+                        </td>
+                        <td className="align-items-end">
+                        <Button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => navigate(`/DPR_SAF/ressource/modifier/${ressource.id}`)}
+                          >
+                            <i className="ni ni-settings" /> Modifier la ressource
                           </Button>
                         </td>
                       </tr>
