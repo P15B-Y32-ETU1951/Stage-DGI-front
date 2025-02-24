@@ -33,13 +33,32 @@ const Login = () => {
 
   // Redirection si l'utilisateur est déjà connecté
   useEffect(() => {
+    
+  
     if (authToken && authRole && token_expiration) {
-      const tokenExpirationDate = new Date(token_expiration); // Conversion de la chaîne en objet Date
-      if (tokenExpirationDate > new Date()) { // Comparaison correcte des deux dates
+      const tokenExpirationDate = new Date(token_expiration);
+  
+      if (!isNaN(tokenExpirationDate.getTime()) && tokenExpirationDate > new Date()) {
         navigate(`/${authRole}/index`);
+      } else {
+        console.warn("Token expiré ou invalide, suppression des données...");
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("authRole");
+        localStorage.removeItem("token_expiration");
       }
     }
-  }, [authToken, authRole, token_expiration, navigate]);
+  
+    // Synchronisation entre onglets
+    const syncAuth = (event) => {
+      if (event.key === "authToken" || event.key === "token_expiration") {
+        console.log("Changement détecté dans localStorage, rechargement...");
+        window.location.reload();
+      }
+    };
+  
+    window.addEventListener("storage", syncAuth);
+    return () => window.removeEventListener("storage", syncAuth);
+  }, [navigate]);
   
 
   const handleInputChange = (event) => {
