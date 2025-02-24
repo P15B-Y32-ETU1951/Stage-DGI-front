@@ -51,7 +51,7 @@ const Register = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/auth/services');
+        const response = await fetch('http://192.168.88.18:8080/api/v1/auth/services');
         const data = await response.json();
         setService(data); 
         // Mettre à jour l'état des services
@@ -89,7 +89,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/v1/auth/signup', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

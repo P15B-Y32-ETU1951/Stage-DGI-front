@@ -33,7 +33,7 @@ const Detail = () => {
 
 
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/statut`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/statut`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const Detail = () => {
     
 
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/statut`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/statut`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ const Detail = () => {
       try {
         const authToken = localStorage.getItem('authToken');
        
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/detail/${id}`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/detail/${id}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -103,7 +103,7 @@ const Detail = () => {
 
         // Si le statut est égal à 5, récupérer le motif de rejet
         if (data.statut.id === 5) {
-          const rejetResponse = await fetch(`http://localhost:8080/api/v1/${authRole}/rejet/${id}`, {
+          const rejetResponse = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/rejet/${id}`, {
             headers: {
               'Authorization': `Bearer ${authToken}`
             }

@@ -37,7 +37,7 @@ const Ajouter_Ressource = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/DPR_SAF/ressource", {
+      const response = await fetch("http://192.168.88.18:8080/api/v1/DPR_SAF/ressource", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

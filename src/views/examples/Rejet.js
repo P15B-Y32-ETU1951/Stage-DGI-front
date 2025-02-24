@@ -43,7 +43,7 @@ const Rejet = () => {
 
     // Envoyer la requête POST à l'URL appropriée
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${role}/demande/statut`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${role}/demande/statut`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const Rejet = () => {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${role}/rejet`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${role}/rejet`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ const Rejet = () => {
       try {
         const authToken = localStorage.getItem('authToken');
         const authRole = localStorage.getItem('authRole');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/detail/${id}`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/detail/${id}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }

@@ -16,7 +16,7 @@ const Suivi = () => {
     const fetchDemandes = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/user`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/user`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
@@ -37,7 +37,7 @@ const Suivi = () => {
     const fetchStatuts = async () => {
       const authToken = localStorage.getItem('authToken');
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/statut/all`,{
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/statut/all`,{
           headers: {
             Authorization: `Bearer ${authToken}`,
           },

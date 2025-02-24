@@ -25,7 +25,7 @@ const Approvisionnement = () => {
   useEffect(() => {
     const fetchRessource = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource/${id}`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource/${id}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -49,7 +49,7 @@ const Approvisionnement = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource/approvisionner`, {
+      const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource/approvisionner`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

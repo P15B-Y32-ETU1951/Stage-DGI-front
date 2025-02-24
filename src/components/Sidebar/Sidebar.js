@@ -82,7 +82,7 @@ const Sidebar = (props) => {
 
   const fetchValidatedDemands = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/CHEF_SERVICE/demande/8', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/CHEF_SERVICE/demande/8', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
 
@@ -182,7 +182,7 @@ const Sidebar = (props) => {
   // Fonction pour récupérer les notifications
   const fetchNotifications = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/CHEF_SERVICE/notif', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/CHEF_SERVICE/notif', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -209,7 +209,7 @@ const Sidebar = (props) => {
   
   const markNotificationsAsSeen = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/CHEF_SERVICE/notif/seen', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/CHEF_SERVICE/notif/seen', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

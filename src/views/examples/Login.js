@@ -90,7 +90,7 @@ const Login = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/auth/signin", {
+      const response = await fetch("http://192.168.88.18:8080/api/v1/auth/signin", {
         method: "POST", // Utilisez POST pour envoyer les données dans le corps de la requête
         headers: {
           "Content-Type": "application/json",

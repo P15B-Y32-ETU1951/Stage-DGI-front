@@ -21,7 +21,7 @@ const Sidebar_notif = (props) => {
   const fetchValidatedDemands = async () => {
     if (!token) return; // Vérifie si le token existe avant la requête
     try {
-      const response = await fetch('http://localhost:8080/api/v1/DPR_SAF/demande/4', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/DPR_SAF/demande/4', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Erreur réseau lors de la récupération des demandes validées');
@@ -54,7 +54,7 @@ const Sidebar_notif = (props) => {
   const fetchNotifications = async () => {
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:8080/api/v1/DPR_SAF/notif', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/DPR_SAF/notif', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Erreur réseau lors de la récupération des notifications');
@@ -72,7 +72,7 @@ const Sidebar_notif = (props) => {
   const markNotificationsAsSeen = async () => {
     if (!token || notificationIds.length === 0) return;
     try {
-      const response = await fetch('http://localhost:8080/api/v1/DPR_SAF/notif/seen', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/DPR_SAF/notif/seen', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

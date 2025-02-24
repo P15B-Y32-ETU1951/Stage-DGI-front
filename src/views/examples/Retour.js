@@ -24,7 +24,7 @@ const Retour = () => {
     const fetchDemandeDetails = async () => {
       try {
         const token = localStorage.getItem('authToken');
-        const demandeResponse = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/detail/${id}`, {
+        const demandeResponse = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/detail/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -53,7 +53,7 @@ const Retour = () => {
       if (demande && demande.travaux && demande.travaux.id) {
         try {
           const token = localStorage.getItem('authToken');
-          const ressourceResponse = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource/travaux/${demande.travaux.id}`, {
+          const ressourceResponse = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource/travaux/${demande.travaux.id}`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -109,7 +109,7 @@ const Retour = () => {
 
     // Envoyer la requête POST à l'URL appropriée
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${role}/demande/statut`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${role}/demande/statut`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

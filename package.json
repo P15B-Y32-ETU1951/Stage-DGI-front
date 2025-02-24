@@ -7,6 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/creativetimofficial/argon-dashboard-react.git"
   },
+
   "keywords": [
     "react",
     "reactjs",
@@ -24,7 +25,7 @@
   },
   "homepage": "http://localhost:3000/auth/login",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --host 0.0.0.0",
     "build": "cross-env PUBLIC_URL=/ react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

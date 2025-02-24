@@ -51,7 +51,7 @@ const Sidebar_notif = (props) => {
       try {
         const authToken = localStorage.getItem('authToken');
         const authRole = localStorage.getItem('authRole');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/termine`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/termine`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -68,7 +68,7 @@ const Sidebar_notif = (props) => {
   // Fonction pour récupérer les demandes validées et vérifier les non-planifiées
   const fetchValidatedDemands = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/DPR_SAF/demande/4', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/DPR_SAF/demande/4', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
 
@@ -122,7 +122,7 @@ const Sidebar_notif = (props) => {
   // Fonction pour récupérer les notifications
   const fetchNotifications = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/DPR_SAF/notif', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/DPR_SAF/notif', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -165,7 +165,7 @@ const Sidebar_notif = (props) => {
 
   const markNotificationsAsSeen = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/DPR_SAF/notif/seen', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/DPR_SAF/notif/seen', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

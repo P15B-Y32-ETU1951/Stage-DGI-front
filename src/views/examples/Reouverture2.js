@@ -24,7 +24,7 @@ const Reouverture2 = () => {
     const fetchRessources = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource/dispo`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource/dispo`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -226,7 +226,7 @@ const Reouverture2 = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/reouverture`, {
+      const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/reouverture`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -250,7 +250,7 @@ const Reouverture2 = () => {
     const data = { "statut": 7, "id_demande": id };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/statut`, {
+      const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/statut`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

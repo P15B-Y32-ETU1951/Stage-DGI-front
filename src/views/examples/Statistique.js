@@ -49,7 +49,7 @@ const Statistique = () => {
       try {
         const authToken = localStorage.getItem('authToken');
         const authRole = localStorage.getItem('authRole');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/statistique/demande`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/statistique/demande`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -65,7 +65,7 @@ const Statistique = () => {
       try {
         const authToken = localStorage.getItem('authToken');
         const authRole = localStorage.getItem('authRole');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/statistique/allstatutdemandes`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/statistique/allstatutdemandes`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -81,7 +81,7 @@ const Statistique = () => {
     const fetchStatuts = async () => {
       try {
        
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/statut`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/statut`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -95,7 +95,7 @@ const Statistique = () => {
 
     const fetchServices = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/auth/services');
+        const response = await fetch('http://192.168.88.18:8080/api/v1/auth/services');
         const data = await response.json();
         setServices(data);
       } catch (error) {
@@ -104,7 +104,7 @@ const Statistique = () => {
     };
     const fetchRessources = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource`,{
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource`,{
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -117,7 +117,7 @@ const Statistique = () => {
     };
     const fetchRessourceTravaux = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource/travaux`,{
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource/travaux`,{
           headers: {
             'Authorization': `Bearer ${authToken}`
           }

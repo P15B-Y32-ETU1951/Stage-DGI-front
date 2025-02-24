@@ -49,7 +49,7 @@ const Demande = () => {
     
         // Envoyer la requête POST à l'URL appropriée
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/${role}/demande`, {
+            const response = await fetch(`http://192.168.88.18:8080/api/v1/${role}/demande`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

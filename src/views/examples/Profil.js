@@ -39,7 +39,7 @@ const Profil = () => {
             console.log(token," io le token"); 
 
             try {
-                const response = await fetch('http://localhost:8080/api/v1/auth/userinfo', {
+                const response = await fetch('http://192.168.88.18:8080/api/v1/auth/userinfo', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

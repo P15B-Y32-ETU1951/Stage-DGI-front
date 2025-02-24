@@ -104,7 +104,7 @@ const Sidebar_chef = (props) => {
 
   const fetchValidatedDemands = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/CHEF_SERVICE/demande/8', {
+      const response = await fetch('http://192.168.88.18:8080/api/v1/CHEF_SERVICE/demande/8', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
 

@@ -11,7 +11,7 @@ const AgentNavbar = (props) => {
       const fetchUserInfo = async () => {
           const token = localStorage.getItem('authToken'); 
           console.log(token," io le token"); // Le token doit être sauvegardé correctement
-          const response = await fetch('http://localhost:8080/api/v1/auth/userinfo', {
+          const response = await fetch('http://192.168.88.18:8080/api/v1/auth/userinfo', {
               method: 'GET',
               headers: {
                   'Authorization': `Bearer ${token}`,  // S'assurer que le token est bien envoyé ici

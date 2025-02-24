@@ -22,14 +22,14 @@ const Reouverture = () => {
         const authToken = localStorage.getItem('authToken');
         
         // Charger les ressources disponibles
-        const ressourceResponse = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource/dispo`, {
+        const ressourceResponse = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource/dispo`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         const ressourceData = await ressourceResponse.json();
         setRessources(ressourceData);
 
         // Charger les détails du travail existant
-        const travailResponse = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/detail/${id}`, {
+        const travailResponse = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/detail/${id}`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         const travailData = await travailResponse.json();
@@ -106,7 +106,7 @@ const Reouverture = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/reouverture`, {
+      const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/reouverture`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const Reouverture = () => {
     const data = { "statut": 7, "id_demande": id };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/statut`, {
+      const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/statut`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

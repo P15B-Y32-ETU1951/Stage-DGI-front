@@ -48,7 +48,7 @@ const Modifier_Ressource = () => {
     };
 
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/DPR_SAF/ressource/modifier`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/DPR_SAF/ressource/modifier`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -74,7 +74,7 @@ const Modifier_Ressource = () => {
   useEffect(()=>{
     const fetchressource= async ()=>{
         try{
-            const response=await fetch(`http://localhost:8080/api/v1/DPR_SAF/ressource/${id}`,{
+            const response=await fetch(`http://192.168.88.18:8080/api/v1/DPR_SAF/ressource/${id}`,{
                 method:"GET",
                 headers:{
                     "Content-Type":"application/json",

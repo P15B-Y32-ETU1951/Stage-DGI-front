@@ -16,7 +16,7 @@ const Suivi_Chef = () => {
     const fetchDemandes = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/service`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/service`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -35,7 +35,7 @@ const Suivi_Chef = () => {
   useEffect(() => {
     const fetchStatuts = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/statut/all`, {headers: {'Authorization': `Bearer ${authToken}`}});
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/statut/all`, {headers: {'Authorization': `Bearer ${authToken}`}});
         const data = await response.json();
         setStatuts(data); 
         console.log("statuts:",data);

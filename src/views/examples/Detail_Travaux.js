@@ -25,7 +25,7 @@ const DetailTravaux = () => {
       try {
         const token = localStorage.getItem("authToken");
         const response = await fetch(
-          `http://localhost:8080/api/v1/${authRole}/demande/detail/${id}`,
+          `http://192.168.88.18:8080/api/v1/${authRole}/demande/detail/${id}`,
           {
             method: "GET",
             headers: {

@@ -44,7 +44,7 @@ const DPR_Detail_nb = () => {
 
     // Envoyer la requête POST à l'URL appropriée
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${role}/demande/statut`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${role}/demande/statut`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const DPR_Detail_nb = () => {
     const fetchDemandes = async () => {
       try {
        
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/detail/${id}`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/detail/${id}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }

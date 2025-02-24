@@ -12,7 +12,7 @@ const PdfViewer = () => {
   useEffect(() => {
     const fetchPdf = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/download/${id}`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/download/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authToken}`,

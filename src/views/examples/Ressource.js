@@ -14,7 +14,7 @@ const Ressource = () => {
       try {
         const authToken = localStorage.getItem('authToken');
         const authRole = localStorage.getItem('authRole');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         const data = await response.json();

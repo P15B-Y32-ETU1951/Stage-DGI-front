@@ -18,7 +18,7 @@ const Rapport = () => {
       try {
         const authToken = localStorage.getItem('authToken');
         const authRole = localStorage.getItem('authRole');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/9`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/9`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         const data = await response.json();
@@ -31,7 +31,7 @@ const Rapport = () => {
 
     const fetchServices = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/auth/services');
+        const response = await fetch('http://192.168.88.18:8080/api/v1/auth/services');
         const data = await response.json();
         setServices(data);
       } catch (error) {

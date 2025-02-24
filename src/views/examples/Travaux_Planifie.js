@@ -13,7 +13,7 @@ const Travaux_Planifie = () => {
       try {
         const authToken = localStorage.getItem('authToken');
         const authRole = localStorage.getItem('authRole');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/6`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/6`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -53,7 +53,7 @@ const Travaux_Planifie = () => {
 
     // Envoyer la requête POST à l'URL appropriée
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${role}/demande/statut`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${role}/demande/statut`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

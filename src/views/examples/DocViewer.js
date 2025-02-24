@@ -36,7 +36,7 @@ const DocViewer = () => {
     };
 
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/${role}/demande/statut`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${role}/demande/statut`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const DocViewer = () => {
         const role = localStorage.getItem('authRole');
         setAuthRole(role);  // Mettre à jour authRole
 
-        const response = await fetch(`http://localhost:8080/api/v1/${role}/demande/detail/${id}`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${role}/demande/detail/${id}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -75,7 +75,7 @@ const DocViewer = () => {
 
         // Si le statut est égal à 5, récupérer le motif de rejet
         if (data.statut.id === 5) {
-          const rejetResponse = await fetch(`http://localhost:8080/api/v1/${role}/rejet/${id}`, {
+          const rejetResponse = await fetch(`http://192.168.88.18:8080/api/v1/${role}/rejet/${id}`, {
             headers: {
               'Authorization': `Bearer ${authToken}`
             }

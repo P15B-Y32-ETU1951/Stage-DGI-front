@@ -30,7 +30,7 @@ const Planification3 = () => {
     const fetchRessources = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
-        const response = await fetch(`http://localhost:8080/api/v1/${authRole}/ressource/dispo`, {
+        const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/ressource/dispo`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -234,7 +234,7 @@ const Planification3 = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/planification`, {
+      const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/planification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -258,7 +258,7 @@ const Planification3 = () => {
     const data = { "statut": 6, "id_demande": id };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/${authRole}/demande/statut`, {
+      const response = await fetch(`http://192.168.88.18:8080/api/v1/${authRole}/demande/statut`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
